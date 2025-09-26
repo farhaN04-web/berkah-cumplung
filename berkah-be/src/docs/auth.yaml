@@ -1,0 +1,146 @@
+openapi: 3.0.0
+info:
+  title: Auth API
+  description: API for User Authentication
+  version: 1.0.0
+paths:
+  /v1/auth/register/:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDto'
+      responses:
+        '201':
+          description: User Registered Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthBaseResponseDto'
+              example:
+                status: "success"
+                code: 201
+                message: "User registered successfully"
+                data:
+                  name: "John Doe"
+                  email: "john.doe@example.com"
+                  role: "user"
+  /v1/auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login User & Admin Endpoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+      responses:
+        '200':
+          description: User Logged In Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthBaseResponseDto'
+              example:
+                status: "success"
+                code: 200
+                message: "User logged in successfully"
+                data:
+                  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  user:
+                    name: "John Doe"
+                    email: "john.doe@example.com"
+                    photo: "https://example.com/images/johndoe.jpg"
+                    role: "user"
+  /v1/auth/forgot-password:
+    post:
+      tags:
+        - Authentication
+      summary: Request link for password reset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordDto'
+      responses:
+        '200':
+          description: Password Reset Link Sent Successfully
+          content:
+            application/json:
+              example:
+                status: "success"
+                code: 200
+                message: "Password reset link sent successfully"
+components:
+  schemas:
+    RegisterDto:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        confirmationPassword:
+          type: string
+    LoginDto:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    ForgotPasswordDto:
+      type: object
+      properties:
+        email:
+          type: string
+    ResetPasswordDto:
+      type: object
+      properties:
+        token:
+          type: string
+        password:
+          type: string
+        confirmationPassword:
+          type: string
+    LoginResponseDto:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: '#/components/schemas/UserResponseDto'
+    UserResponseDto:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        photo:
+          type: string
+        role:
+          type: string
+    AuthBaseResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/UserResponseDto'
+            - $ref: '#/components/schemas/LoginResponseDto'

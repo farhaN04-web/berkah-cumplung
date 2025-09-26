@@ -1,0 +1,261 @@
+openapi: 3.0.3
+info:
+  title: Cart API
+  description: API for managing user carts
+  version: 1.0.0
+paths:
+  /v1/user/cart:
+    get:
+      summary: Get user carts
+      description: Fetch all carts for the authenticated user.
+      tags:
+        - User - Cart
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartBaseResponseDtoArray'
+    post:
+      summary: Add product to cart
+      description: Add a product to the authenticated user's cart.
+      tags:
+        - User - Cart
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddCartDto'
+      responses:
+        '201':
+          description: Product added to cart successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartBaseResponseDto'
+        '400':
+          description: Product already in cart
+        '404':
+          description: Product not found
+  /v1/user/cart/{id}:
+    put:
+      summary: Update cart
+      description: Update the quantity of a product in the authenticated user's cart.
+      tags:
+        - User - Cart
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Cart ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCartDto'
+      responses:
+        '200':
+          description: Cart updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartBaseResponseDto'
+        '404':
+          description: Cart not found
+    delete:
+      summary: Delete cart
+      description: Delete a product from the authenticated user's cart.
+      tags:
+        - User - Cart
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Cart ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cart deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartBaseResponseDtoNull'
+        '404':
+          description: Cart not found
+  /v1/user/cart/checkout:
+    post:
+      summary: Checkout user cart
+      description: Checkout the authenticated user's cart and create a transaction.
+      tags:
+        - User - Cart
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutDto'
+      responses:
+        '200':
+          description: Checkout successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutResponseDto'
+        '400':
+          description: No cart items found or invalid products
+        '500':
+          description: Transaction failed
+  /v1/user/order-history:
+    get:
+      summary: Get user order history
+      description: Fetch the order history for the authenticated user.
+      tags:
+        - User - Order
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Order history retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderHistoryResponseDto'
+        '404':
+          description: No order history found
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    CartBaseResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/CartResponseDto'
+    CartBaseResponseDtoArray:
+      type: object
+      properties:
+        status:
+          type: string
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartResponseDto'
+    CartBaseResponseDtoNull:
+      type: object
+      properties:
+        status:
+          type: string
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          type: null
+    CartResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        product_name:
+          type: string
+        qty:
+          type: integer
+        price:
+          type: number
+        subtotal:
+          type: number
+    AddCartDto:
+      type: object
+      properties:
+        product_id:
+          type: string
+        qty:
+          type: integer
+    UpdateCartDto:
+      type: object
+      properties:
+        qty:
+          type: integer
+    CheckoutDto:
+      type: object
+      properties:
+        cartIds:
+          type: array
+          items:
+            type: string
+      example:
+        cartIds:
+          - "12345"
+          - "67890"
+    CheckoutResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        total:
+          type: number
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    OrderHistoryResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              total:
+                type: number
+              status:
+                type: string
+              createdAt:
+                type: string
+                format: date-time
+              updatedAt:
+                type: string
+                format: date-time

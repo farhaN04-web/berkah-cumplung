@@ -1,0 +1,129 @@
+openapi: 3.0.0
+info:
+  title: Dashboard API
+  description: API for managing and retrieving dashboard data.
+  version: 1.0.0
+paths:
+  /v1/admin/dashboard/get-total-transaction:
+    get:
+      summary: Get Total Transaction
+      description: Retrieve the total sum of transactions with a status of "success".
+      tags:
+        - Admin - Dashboard
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved the total transaction amount.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Get total transaction success
+                  data:
+                    type: number
+                    example: 10000
+        '500':
+          description: Internal server error.
+
+  /v1/admin/dashboard/get-count-transaction:
+    get:
+      summary: Get Count of Transactions
+      description: Retrieve the count of transactions with a status of "success".
+      tags:
+        - Admin - Dashboard
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved the count of transactions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Get count transaction success
+                  data:
+                    type: integer
+                    example: 50
+        '500':
+          description: Internal server error.
+
+  /v1/admin/dashboard/get-product-total:
+    get:
+      summary: Get Total Products
+      description: Retrieve the total number of products.
+      tags:
+        - Admin - Dashboard
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved the total number of products.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Get product total success
+                  data:
+                    type: integer
+                    example: 200
+        '500':
+          description: Internal server error.
+
+  /v1/admin/dashboard/get-customer-total:
+    get:
+      summary: Get Total Customers
+      description: Retrieve the total number of customers with the role "user".
+      tags:
+        - Admin - Dashboard
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successfully retrieved the total number of customers.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Get customers total success
+                  data:
+                    type: integer
+                    example: 500
+        '500':
+          description: Internal server error.

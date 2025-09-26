@@ -1,0 +1,269 @@
+openapi: 3.0.3
+info:
+  title: Transaction API
+  description: API for managing transactions
+  version: 1.0.0
+paths:
+  /v1/admin/transactions:
+    get:
+      summary: Get all transactions
+      description: Fetch all transactions with details about users and orders.
+      tags:
+        - Admin - Transactions
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          description: Filter transactions by status (pending, success, failed)
+          required: false
+          schema:
+            type: string
+            enum:
+              - pending
+              - success
+              - failed
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: size
+          in: query
+          description: Number of items per page for pagination
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponseWithPaging'
+  /v1/admin/transactions/{id}:
+    get:
+      summary: Get transaction by ID
+      description: Fetch a transaction by its ID with detailed information.
+      tags:
+        - Admin - Transactions
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Transaction ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+              example:
+                status: success
+                code: 200
+                message: Transaction retrieved successfully
+                data:
+                  id: a0cf4158-06ea-4eb7-a1b3-649231212018
+                  orderId: ORD-A0CF4158
+                  total: 610000
+                  status: pending
+                  createdAt: 2025-05-19T12:42:44.340Z
+                  updatedAt: 2025-05-19T12:42:44.340Z
+                  TransactionDetails:
+                    - id: 23b8b910-3c40-4a9d-a304-ac2048e14ae9
+                      product_id: a06ef33a-60a5-481d-83a9-c084d9a05940
+                      qty: 3
+                      price: 150000
+                      sub_total: 450000
+                    - id: b5564911-0cd8-4f05-9c63-94c8729e2e6b
+                      product_id: f67536c3-25f8-44ff-9ccd-db78d5d2626f
+                      qty: 2
+                      price: 80000
+                      sub_total: 160000
+        '404':
+          description: Transaction not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFoundResponse'
+    put:
+      summary: Update transaction status
+      description: Update the status of a transaction (e.g., pending, success, failed).
+      tags:
+        - Admin - Transactions
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: Transaction ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStatusTransactionDto'
+      responses:
+        '200':
+          description: Transaction status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseUpdateResponse'
+        '404':
+          description: Transaction not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFoundResponse'
+components:
+  schemas:
+    BaseUpdateResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: Transaction status updated successfully
+    BaseResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: pending | success | failed
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: Transactions retrieved successfully
+        data:
+          type: object
+    BaseResponseWithPaging:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/TransactionDto'
+            paging:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  example: 1
+                size:
+                  type: integer
+                  example: 10
+                current_page:
+                  type: integer
+                  example: 1
+                total_page:
+                  type: integer
+                  example: 1
+          example:
+            status: success
+            code: 200
+            message: Transactions retrieved successfully
+            data:
+              - id: a0cf4158-06ea-4eb7-a1b3-649231212018
+                orderId: ORD-A0CF4158
+                name: Iqbal Pamula
+                total: 610000
+                status: pending
+                createdAt: 2025-05-19T12:42:44.340Z
+                updatedAt: 2025-05-19T12:42:44.340Z
+              - id: 1636d20c-b481-42bb-bfc3-f3b2048caf35
+                orderId: ORD-1636D20C
+                name: Iqbal Pamula
+                total: 540000
+                status: failed
+                createdAt: 2025-05-19T09:48:18.537Z
+                updatedAt: 2025-05-20T15:43:28.025Z
+            paging:
+              page: 1
+              size: 10
+              current_page: 1
+              total_page: 1
+    TransactionDto:
+      type: object
+      properties:
+        id:
+          type: string
+        orderId:
+          type: string
+        name:
+          type: string
+          nullable: true
+        total:
+          type: number
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    TransactionDetailDto:
+      allOf:
+        - $ref: '#/components/schemas/TransactionDto'
+        - type: object
+          properties:
+            TransactionDetails:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  product_id:
+                    type: string
+                  qty:
+                    type: integer
+                  price:
+                    type: number
+                  sub_total:
+                    type: number
+    UpdateStatusTransactionDto:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - pending
+            - success
+            - failed
+    ErrorNotFoundResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Transaction not found

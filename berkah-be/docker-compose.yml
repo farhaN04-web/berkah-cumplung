@@ -1,0 +1,40 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: broderie-backend
+    restart: unless-stopped
+    ports:
+      - "5001:5000"
+      - "5555:5555"
+    volumes:
+      - ./storage:/app/storage
+    env_file:
+      - .env.production
+    depends_on:
+      - db
+    networks:
+      - broderie-network
+
+  db:
+    image: mysql:8.0.40
+    container_name: broderie-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: broderie
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - broderie-network
+    mem_limit: 1073741824 # 1GB memory limit
+
+networks:
+  broderie-network:
+    driver: bridge
+
+volumes:
+  mysql_data:

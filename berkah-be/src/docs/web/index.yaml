@@ -1,0 +1,152 @@
+openapi: 3.0.3
+info:
+  title: Product API
+  description: API for managing products
+  version: 1.0.0
+paths:
+  /v1/products:
+    get:
+      summary: Get all products
+      description: Fetch all products.
+      tags:
+        - Public API
+      parameters:
+        - name: name
+          in: query
+          description: Filter by product name
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: size
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductBaseResponseDtoArray'
+  /v1/products/{id}:
+    get:
+      summary: Get product by ID
+      description: Fetch a product by its ID.
+      tags:
+        - Public API
+      parameters:
+        - name: id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductBaseResponseDto'
+        '404':
+          description: Product not found
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ProductBaseResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          type: object
+        error:
+          type: string
+      example:
+        status: success
+        code: 200
+        message: Product retrieved successfully!
+        data:
+          id: "12345"
+          name: "Product Name"
+          description: "This is a sample product description."
+          price: 100.0
+          stock: 50
+          image: "https://example.com/image.png"
+          createdAt: "2023-01-01T00:00:00Z"
+    ProductBaseResponseDtoArray:
+      type: object
+      properties:
+        status:
+          type: string
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductResponseDto'
+      example:
+        status: success
+        code: 200
+        message: Products retrieved successfully!
+        data:
+          - id: "12345"
+            name: "Product Name"
+            description: "This is a sample product description."
+            price: 100.0
+            stock: 50
+            image: "https://example.com/image.png"
+            createdAt: "2023-01-01T00:00:00Z"
+          - id: "67890"
+            name: "Another Product"
+            description: "Another sample product description."
+            price: 200.0
+            stock: 30
+            image: "https://example.com/image2.png"
+            createdAt: "2023-01-02T00:00:00Z"
+    ProductResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        stock:
+          type: integer
+        image:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      example:
+        id: "12345"
+        name: "Product Name"
+        description: "This is a sample product description."
+        price: 100.0
+        stock: 50
+        image: "https://example.com/image.png"
+        createdAt: "2023-01-01T00:00:00Z"

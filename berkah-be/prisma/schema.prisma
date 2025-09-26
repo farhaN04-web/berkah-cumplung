@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  user
+  admin
+}
+
+// Users Data
+model Users {
+  id        String    @id @default(uuid())
+  name      String    @db.VarChar(150)
+  email     String    @unique @db.VarChar(40)
+  password  String
+  photo     String?   @db.Text
+  role      Role      @default(user)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? @db.DateTime(3)
+
+  Carts        Carts[]
+  Transactions Transactions[]
+
+  @@map("users")
+}
+
+model Products {
+  id                 String               @id @default(uuid())
+  name               String               @db.VarChar(150)
+  category_id        String
+  price              Float
+  stock              Int
+  description        String               @db.Text
+  image              String               @db.Text
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  deletedAt          DateTime?            @db.DateTime(3)
+  category           Category             @relation(fields: [category_id], references: [id])
+  Carts              Carts[]
+  TransactionDetails TransactionDetails[]
+
+  @@map("products")
+}
+
+model Carts {
+  id         String    @id @default(uuid())
+  user_id    String
+  product_id String
+  qty        Int
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime? @db.DateTime(3)
+
+  user    Users    @relation(fields: [user_id], references: [id])
+  product Products @relation(fields: [product_id], references: [id])
+
+  @@map("carts")
+}
+
+enum Status {
+  pending
+  success
+  failed
+}
+
+model Transactions {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  user_id     String
+  total_price Int
+  status      Status   @default(pending)
+  shipping_status      Status   @default(pending)
+  shipping_number String?
+  shipping_address  String?   @db.Text   
+  shipping_courier  String?   
+  shipping_service  String?   
+  shipping_cost     Int?      
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user               Users                @relation(fields: [user_id], references: [id])
+  TransactionDetails TransactionDetails[]
+
+  @@map("transactions")
+}
+
+model TransactionDetails {
+  id             String   @id @default(uuid())
+  transaction_id String
+  product_id     String
+  price          Int
+  qty            Int
+  sub_total      Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  transaction Transactions @relation(fields: [transaction_id], references: [id])
+  product     Products     @relation(fields: [product_id], references: [id])
+
+  @@map("transaction_details")
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String
+  products  Products[]
+}

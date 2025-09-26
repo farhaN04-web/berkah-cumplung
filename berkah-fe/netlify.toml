@@ -1,0 +1,7 @@
+[build]
+  publish = "dist" # ganti sesuai folder hasil build (misalnya: "build" atau "dist")
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
