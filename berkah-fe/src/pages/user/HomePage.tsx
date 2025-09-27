@@ -69,7 +69,7 @@ const HomePage = () => {
               Produk Unggulan
             </h1>
             <p className="mx-auto text-lg max-w-7xl text-neutral_500 md:text-2xl">
-              Produk sulaman handmade dengan desain yang unik dan berkualitas
+              Produk kerajinan dari kayu dan batok kelapa handmade dengan desain yang berkualitas
             </p>
           </div>
 

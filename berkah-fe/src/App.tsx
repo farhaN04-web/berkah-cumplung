@@ -23,6 +23,7 @@ import { Toaster } from "react-hot-toast";
 import { OrderPage, EditOrderPage } from "@/pages/dashboard/order";
 import { CustomerPage } from "@/pages/dashboard/customer";
 import { LoginPage, RegisterPage, ForgotPasswordPage } from "@/pages/auth";
+import { ResetPasswordPage } from "./pages/auth/ResetPasswordPage";
 import { CatalogProductPage, ProductDetailPage } from "@/pages/user/catalog";
 import { CartPage } from "@/pages/user/cart";
 import { DashboardPage } from "@/pages/dashboard";
@@ -63,6 +64,7 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/history" element={<HistoryPage />} />

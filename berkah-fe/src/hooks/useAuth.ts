@@ -4,6 +4,7 @@ import {
   ForgotPasswordDTO,
   LoginDTO,
   RegisterDTO,
+  ResetPasswordDTO, // 1. Impor DTO yang diperlukan
 } from "@/server/dto/auth.dto";
 import { QueryKeys } from "@/lib/query-keys";
 import { ResponseError, Session } from "@/types";
@@ -112,12 +113,13 @@ export const useForgotPassword = () => {
     mutationFn: (request: ForgotPasswordDTO) => {
       return toast.promise(authService.forgotPassword(request), {
         loading: "Loading...",
-        success: (response) => response.message || "Forgot password berhasil!",
+        success: (response) =>
+          response.message || "Email untuk reset password telah dikirim!",
         error: (error: ResponseError) => {
           return (
             error.response?.message ||
             error.message ||
-            "Gagal untuk forgot password"
+            "Gagal mengirim email reset"
           );
         },
       });
@@ -134,6 +136,39 @@ export const useForgotPassword = () => {
       ? (mutation.error as ResponseError).response?.message ||
         (mutation.error as Error).message ||
         "Gagal untuk forgot password"
+      : undefined,
+  };
+};
+
+// 2. Tambahkan hook baru di sini
+export const useResetPassword = () => {
+  const mutation = useMutation({
+    mutationFn: (request: ResetPasswordDTO) => {
+      return toast.promise(authService.resetPassword(request), {
+        loading: "Menyimpan kata sandi baru...",
+        success: (response) =>
+          response.message || "Kata sandi berhasil diubah!",
+        error: (error: ResponseError) => {
+          return (
+            error.response?.message ||
+            error.message ||
+            "Gagal mengubah kata sandi"
+          );
+        },
+      });
+    },
+  });
+
+  return {
+    ...mutation,
+    isLoading: mutation.isPending,
+    isSuccess: mutation.isSuccess,
+    isError: mutation.isError,
+    error: mutation.error,
+    errorMessage: mutation.error
+      ? (mutation.error as ResponseError).response?.message ||
+        (mutation.error as Error).message ||
+        "Gagal mengubah kata sandi"
       : undefined,
   };
 };

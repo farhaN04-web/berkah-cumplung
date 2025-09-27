@@ -29,3 +29,9 @@ export type RegisterResponse = {
 export type ForgotPasswordDTO = {
   email: string;
 };
+
+export type ResetPasswordDTO = {
+  token: string;
+  password:  string;
+  confirmPassword:  string;
+}

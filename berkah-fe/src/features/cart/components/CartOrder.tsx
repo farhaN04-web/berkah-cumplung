@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useCheckoutCart } from "@/hooks/useCart";
 import { formatRupiah, sendMessageToWhatsapp } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 type CartOrderProps = {
   items: {
@@ -16,6 +16,8 @@ type CartOrderProps = {
 
 export const CartOrder = ({ items }: CartOrderProps) => {
   const { mutate: checkoutCart, isLoading } = useCheckoutCart();
+  const [selectedCourier, setSelectedCourier] = useState("Pos");
+  const courierOptions = ["Pos", "JNE", "J&T", "SiCepat", "GoSend"];
 
   const handleCheckout = () => {
     checkoutCart(
@@ -31,15 +33,16 @@ export const CartOrder = ({ items }: CartOrderProps) => {
               qty: item.qty,
               price: item.price * item.qty,
             })),
+            expedition: selectedCourier,
           });
         },
-      },
+      }
     );
   };
 
   const subtotal = useMemo(
     () => items.reduce((acc, item) => acc + item.price * item.qty, 0),
-    [items],
+    [items]
   );
 
   return (
@@ -58,6 +61,29 @@ export const CartOrder = ({ items }: CartOrderProps) => {
           {formatRupiah(subtotal)}
         </p>
       </div>
+
+      {/*  Tambahkan UI Dropdown untuk memilih kurir */}
+      <div className="mb-4 flex flex-col gap-2">
+        <label
+          htmlFor="courier"
+          className="text-sm font-medium text-black md:text-base"
+        >
+          Pilih Ekspedisi
+        </label>
+        <select
+          id="courier"
+          value={selectedCourier}
+          onChange={(e) => setSelectedCourier(e.target.value)}
+          className="w-full rounded-md border bg-white p-2 text-sm text-black focus:outline-none focus:ring-2 focus:ring-amber-500 md:text-base"
+        >
+          {courierOptions.map((courier) => (
+            <option key={courier} value={courier}>
+              {courier}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <Button
         className="w-full bg-amber-800 text-base hover:bg-amber-500 md:text-lg"
         onClick={handleCheckout}
@@ -65,7 +91,7 @@ export const CartOrder = ({ items }: CartOrderProps) => {
       >
         {isLoading ? (
           <>
-            <Loader2 className="size-4 animate-spin" />
+            <Loader2 className="mr-2 size-4 animate-spin" />
             Memproses...
           </>
         ) : (

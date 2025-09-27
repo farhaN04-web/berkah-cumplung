@@ -5,6 +5,7 @@ import {
   LoginResponse,
   RegisterDTO,
   RegisterResponse,
+  ResetPasswordDTO,
 } from "@/server/dto/auth.dto";
 import { ApiResponse } from "@/types";
 
@@ -37,6 +38,19 @@ class AuthService {
     const response = await httpClient.post<
       ApiResponse<undefined, undefined, undefined>
     >("/auth/forgot-password", request, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return response;
+  }
+
+  // Fungsi baru ditambahkan di sini
+  async resetPassword(request: ResetPasswordDTO) {
+    const response = await httpClient.post<
+      ApiResponse<undefined, undefined, undefined>
+    >("/auth/reset-password", request, {
       headers: {
         "Content-Type": "application/json",
       },
