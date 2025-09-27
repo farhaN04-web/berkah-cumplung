@@ -76,11 +76,7 @@ model Transactions {
   total_price Int
   status      Status   @default(pending)
   shipping_status      Status   @default(pending)
-  shipping_number String?
-  shipping_address  String?   @db.Text   
-  shipping_courier  String?   
-  shipping_service  String?   
-  shipping_cost     Int?      
+  shipping_number String?   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

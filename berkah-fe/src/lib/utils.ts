@@ -39,11 +39,11 @@ export function sendMessageToWhatsapp(request: CheckoutItemDTO) {
 
 export function statusWords(status: string) {
   switch (status) {
+    case "success":
+      return "berhasil";
     case "failed":
       return "gagal";
-    case "pending":
-      return "menunggu";
     default:
-      return "berhasil";
+      return "menunggu";
   }
 }

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jun 17, 2025 at 12:23 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 7.4.33
+-- Host: localhost:3306
+-- Waktu pembuatan: 27 Sep 2025 pada 04.52
+-- Versi server: 8.0.30
+-- Versi PHP: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,212 +24,323 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `carts`
+-- Struktur dari tabel `carts`
 --
 
-CREATE TABLE IF NOT EXISTS `carts` (
-  `id` varchar(191) NOT NULL,
-  `user_id` varchar(191) NOT NULL,
-  `product_id` varchar(191) NOT NULL,
-  `qty` int(11) NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+CREATE TABLE `carts` (
+  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `product_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `qty` int NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   `updatedAt` datetime(3) NOT NULL,
-  `deletedAt` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `carts_user_id_fkey` (`user_id`),
-  KEY `carts_product_id_fkey` (`product_id`)
+  `deletedAt` datetime(3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `carts`
+--
+
+INSERT INTO `carts` (`id`, `user_id`, `product_id`, `qty`, `createdAt`, `updatedAt`, `deletedAt`) VALUES
+('954b0bec-149d-4c88-9d29-d46ee51dfe82', '53a3394b-b7b1-4f2e-b9d6-fe379e0d4afe', '03ddbeb6-5379-4be4-ae78-53d3dd32debb', 1, '2025-09-27 04:49:50.543', '2025-09-27 04:49:50.543', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `products`
+-- Struktur dari tabel `category`
 --
 
-CREATE TABLE IF NOT EXISTS `products` (
-  `id` varchar(191) NOT NULL,
-  `name` varchar(150) NOT NULL,
+CREATE TABLE `category` (
+  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `category`
+--
+
+INSERT INTO `category` (`id`, `name`) VALUES
+('352ee61b-3c10-4174-8de3-be2febd31514', 'Clutch & Handbag'),
+('3af21147-6886-48a0-a6d6-197b949b1f9e', 'Tas Selempang'),
+('48918e9d-5eb1-4a63-a5f3-dd923420fed6', 'Backpack & Ransel'),
+('6c4d4954-2dd3-4c4a-abcd-04e83f28dc9c', 'Totebag'),
+('a413dfb5-2b46-429e-a445-a81604b5274d', 'Dompet & Pouch'),
+('c73cffa2-e9dc-44ac-9ccf-fb9fdf2047da', 'Aksesoris & Lainnya');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `products`
+--
+
+CREATE TABLE `products` (
+  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `price` double NOT NULL,
-  `stock` int(11) NOT NULL,
-  `description` text NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `stock` int NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `image` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   `updatedAt` datetime(3) NOT NULL,
   `deletedAt` datetime(3) DEFAULT NULL,
-  `image` text NOT NULL,
-  PRIMARY KEY (`id`)
+  `category_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `products`
+-- Dumping data untuk tabel `products`
 --
 
-INSERT INTO `products` (`id`, `name`, `price`, `stock`, `description`, `createdAt`, `updatedAt`, `deletedAt`, `image`) VALUES
-('019c5c4a-773f-4a6c-9d1b-ffe15308a1cb', 'Dompet Gemoy', 60000, 26, 'Dompet handmade berkualitas tinggi dengan ukuran 16 x 11 x 7 cm, varian Hitam. Dibuat dengan bahan pilihan dan ketelitian tinggi.', '2025-06-17 09:30:09.933', '2025-06-17 10:22:05.658', NULL, 'storage/images/image-1750155725655-437173864.png'),
-('027ce2f0-4c4b-472d-949c-23e8707973d7', 'PO. Mini Slingbag', 70000, 32, 'Produk handmade berkualitas tinggi dengan ukuran 15 x 20 cm, varian Polkadot. Dibuat dengan ketelitian dan bahan premium.', '2025-06-17 09:30:10.207', '2025-06-17 09:56:59.770', NULL, 'storage/images/image-1750154219766-809474084.png'),
-('048b4229-1e3d-4206-8fad-88ddb0a608db', 'Recycled Handbag', 270000, 30, 'Tas handmade eksklusif, varian Ecru. Desain unik dan fungsional.', '2025-06-17 09:30:09.984', '2025-06-17 10:19:11.639', NULL, 'storage/images/image-1750155551635-780646419.png'),
-('05f9267a-0791-4199-9fb7-18f2d7105531', 'Clutch Mawar Cream', 315000, 31, 'Tas handmade eksklusif, varian Cream. Desain unik dan fungsional.', '2025-06-17 09:30:10.009', '2025-06-17 10:17:02.612', NULL, 'storage/images/image-1750155422608-160845335.png'),
-('0839ba7a-4d8b-4360-90af-71f97f525bfd', 'Twin Pouch (Tali Panjang)', 110000, 6, 'Produk handmade berkualitas tinggi dengan ukuran 20 x 12,5 x 2,5 cm, varian Set B. Dibuat dengan ketelitian dan bahan premium.', '2025-06-17 09:30:10.226', '2025-06-17 09:46:36.773', NULL, 'storage/images/image-1750153596768-947650102.png'),
-('0dd77e18-fc1b-40c9-b33b-aad6ef36c920', 'Mini Backpack', 190000, 22, 'Tas mini handmade eksklusif dengan ukuran 19 x 24 x 12 cm, varian Navy. Desain unik dan fungsional.', '2025-06-17 09:30:09.951', '2025-06-17 10:20:07.154', NULL, 'storage/images/image-1750155607150-388883209.png'),
-('11ae6aa7-04a4-4a8a-a431-7496b085ded6', 'Tas Pesta Kotak', 290000, 9, 'Tas handmade eksklusif, varian Silver. Desain unik dan fungsional.', '2025-06-17 09:30:09.995', '2025-06-17 10:18:09.330', NULL, 'storage/images/image-1750155489326-442617253.png'),
-('16f6a953-f8f9-4cb2-aefa-077e0d573d44', 'Totebag Well', 275000, 43, 'Produk handmade berkualitas tinggi dengan ukuran 35 x 30 x 14 cm, varian Biru. Dibuat dengan ketelitian dan bahan premium.', '2025-06-17 09:30:10.129', '2025-06-17 10:02:16.199', NULL, 'storage/images/image-1750154536194-143489282.png'),
-('18afa340-3466-46ab-8bce-7f1f18646f1b', 'Twin Pouch (Tali Pendek)', 100000, 29, 'Produk handmade berkualitas tinggi dengan ukuran 20 x 12,5 x 2,5 cm, varian Set 1. Dibuat dengan ketelitian dan bahan premium.', '2025-06-17 09:50:56.561', '2025-06-17 09:50:56.561', NULL, 'storage/images/image-1750153856555-973596636.png'),
-('1d69f4e8-f8a4-4476-b77c-570347b3be38', 'Tas Mawar Benang', 184500, 48, 'Tas handmade eksklusif dengan ukuran 30 x 20 x 10 cm, varian Benang Pink. Desain unik dan fungsional.', '2025-06-17 09:30:10.089', '2025-06-17 10:09:28.294', NULL, 'storage/images/image-1750154968290-997653765.png'),
-('1e2a9216-2aaa-4ec8-9aa8-bd138ac7b237', 'Mini Handbag', 147000, 21, 'Tas mini handmade eksklusif dengan ukuran 23 x 18 x 8 cm, varian Motif Bunga. Desain unik dan fungsional.', '2025-06-17 09:30:09.935', '2025-06-17 10:21:35.366', NULL, 'storage/images/image-1750155695362-250547372.png'),
-('239f5085-fc40-4c2c-b376-3dcbe9b12c4c', 'Tas Selempang 3 Kantong', 198000, 20, 'Tas handmade eksklusif dengan ukuran 26 x 18 x 10 cm samping motif ecoprint, varian Ecoprint. Desain unik dan fungsional.', '2025-06-17 09:30:10.174', '2025-06-17 09:58:25.724', NULL, 'storage/images/image-1750154305720-915301452.png'),
-('29fac907-6e1f-4aa5-a9d2-c214e56172f0', 'TS. Aplikasi', 184500, 31, 'Produk handmade berkualitas tinggi dengan ukuran 30 x 20 x 10 cm, varian Aplikasi Bunga. Dibuat dengan ketelitian dan bahan premium.', '2025-06-17 09:30:10.103', '2025-06-17 10:08:15.077', NULL, 'storage/images/image-1750154895075-906577494.png'),
-('319ce43a-5b9c-4c82-930a-19a068a2be44', 'PO. Recycled Handbag', 270000, 33, 'Tas handmade eksklusif, varian Denim. Desain unik dan fungsional.', '2025-06-17 09:30:09.989', '2025-06-17 10:18:51.678', NULL, 'storage/images/image-1750155531675-479881996.png'),
-('369b7eff-68c3-4b06-b282-1321ac86ea84', 'Kaligrafi 30 x 30 cm', 250000, 23, 'Hiasan dinding kaligrafi dengan ukuran 30 x 30 cm, varian Emas. Mempercantik ruangan.', '2025-06-17 09:30:10.034', '2025-06-17 10:14:50.339', NULL, 'storage/images/image-1750155290335-239046999.png'),
-('36cd127f-bfba-4650-855d-21781448f62c', 'Clutch Mini', 200000, 32, 'Tas mini handmade eksklusif, varian Hitam. Desain unik dan fungsional.', '2025-06-17 09:30:10.019', '2025-06-17 10:15:55.222', NULL, 'storage/images/image-1750155355218-552427058.png'),
-('434d2315-be7a-427e-a073-19d985e9c1f6', 'Ransel Anti Maling', 278000, 5, 'Tas handmade eksklusif, varian Hitam. Desain unik dan fungsional.', '2025-06-17 09:30:09.968', '2025-06-17 10:19:44.348', NULL, 'storage/images/image-1750155584344-407349567.png'),
-('4386d95e-4f66-4fe0-b046-7c03d00e1957', 'Pembatas Buku sulam benang', 45000, 46, 'Pembatas buku sulaman dengan ukuran 8,5 cm, varian Motif Buku. Untuk pecinta buku.', '2025-06-17 09:30:10.157', '2025-06-17 09:59:03.763', NULL, 'storage/images/image-1750154343760-483299696.png'),
-('46c04b9c-379e-470c-8e0e-d2f251e9f409', 'PO. TS. Keranjang Bunga', 184500, 50, 'Produk handmade berkualitas tinggi dengan ukuran 30 x 20 x 10 cm, varian Keranjang Bunga. Dibuat dengan ketelitian dan bahan premium.', '2025-06-17 09:30:10.112', '2025-06-17 10:07:35.344', NULL, 'storage/images/image-1750154855340-290535874.png'),
-('486ce69b-2f91-4f2f-a931-d3be1e3cb4a5', 'Tas Selempang Truntum', 200000, 47, 'Tas handmade eksklusif dengan ukuran 30 x 20 x 10 cm, varian Batik. Desain unik dan fungsional.', '2025-06-17 09:30:10.046', '2025-06-17 10:13:59.141', NULL, 'storage/images/image-1750155239134-475775325.png'),
-('4ca5d4e3-d83f-401a-ba98-20f601f8fe88', 'Tas Selempang', 184500, 40, 'Tas handmade eksklusif dengan ukuran 30 x 20 x 10 cm, varian Polos. Desain unik dan fungsional.', '2025-06-17 09:30:10.062', '2025-06-17 10:12:58.247', NULL, 'storage/images/image-1750155178243-972319749.png'),
-('54655b41-8d80-4dca-886c-8a851a5320f7', 'PO. Tas Selempang 3 Kantong', 198000, 36, 'Tas handmade eksklusif dengan ukuran 26 x 18 x 10 cm samping motif ecoprint, varian Ecoprint Bunga. Desain unik dan fungsional.', '2025-06-17 09:30:10.178', '2025-06-17 09:57:57.514', NULL, 'storage/images/image-1750154277504-138217472.png'),
-('5a59f183-6b74-4ddc-9624-901eac53f8f9', 'Tempat pensil', 35000, 29, 'Tempat pensil handmade dengan ukuran 20 x 9,5 cm, varian Motif Buku. Praktis dan stylish.', '2025-06-17 09:37:00.558', '2025-06-17 09:37:00.558', NULL, 'storage/images/image-1750153020547-256009350.png'),
-('663250ae-54b4-487c-9da7-3744ceda701e', 'Dompet Beranak (3 pcs)', 135000, 50, 'Dompet handmade berkualitas tinggi dengan ukuran 16 x 15 x 6 cm, varian Set Biru. Dibuat dengan bahan pilihan dan ketelitian tinggi.', '2025-06-17 09:30:10.255', '2025-06-17 09:38:42.014', NULL, 'storage/images/image-1750153122009-446041098.png'),
-('6e4e9960-7830-426f-9d36-4a149cc791e4', 'PO. Tas Selempang Love Benang', 184500, 42, 'Tas handmade eksklusif dengan ukuran 30 x 20 x 10 cm, varian Benang Merah. Desain unik dan fungsional.', '2025-06-17 09:30:10.084', '2025-06-17 10:09:57.378', NULL, 'storage/images/image-1750154997374-806220472.png'),
-('926375ea-a9f3-422c-aa36-36fb6b13b168', 'Gantungan Kunci', 37000, 5, 'Gantungan kunci unik, varian Karakter. Cocok untuk koleksi atau hadiah.', '2025-06-17 09:30:10.152', '2025-06-17 09:59:23.260', NULL, 'storage/images/image-1750154363257-362729407.png'),
-('961804a1-43c2-4576-bb8a-2a42807e70f1', 'PO. Mini Handbag', 147000, 27, 'Tas mini handmade eksklusif dengan ukuran 23 x 18 x 8 cm, varian Motif Geometris. Desain unik dan fungsional.', '2025-06-17 09:30:09.940', '2025-06-17 10:21:07.622', NULL, 'storage/images/image-1750155667618-12132710.png'),
-('9db348b4-882d-4bfa-8bac-28e35e6f29fe', 'Mini Slingbag', 70000, 1, 'Produk handmade berkualitas tinggi dengan ukuran 15 x 20 cm, varian Biru. Dibuat dengan ketelitian dan bahan premium.', '2025-06-17 09:30:10.183', '2025-06-17 09:57:23.738', NULL, 'storage/images/image-1750154243734-862250199.png'),
-('a1a28eaa-ebbd-4bbe-bae8-4251100d061c', 'Tas Selempang Kawung', 200000, 5, 'Tas handmade eksklusif dengan ukuran 30 x 20 x 10 cm, varian Hitam. Desain unik dan fungsional.', '2025-06-17 09:30:10.049', '2025-06-17 10:13:31.025', NULL, 'storage/images/image-1750155211022-196157149.png'),
-('abfcff76-43de-488f-a123-bd3bec8c724f', 'Clutch Mawar Silver', 315000, 48, 'Tas handmade eksklusif, varian Silver. Desain unik dan fungsional.', '2025-06-17 09:30:09.999', '2025-06-17 10:17:28.524', NULL, 'storage/images/image-1750155448520-972578408.png'),
-('ae001227-1fa8-41b4-9472-3becdd86a40f', 'Totebag', 275000, 31, 'Produk handmade berkualitas tinggi dengan ukuran 35 x 30 x 14 cm, varian Hitam. Dibuat dengan ketelitian dan bahan premium.', '2025-06-17 09:30:10.134', '2025-06-17 10:01:46.811', NULL, 'storage/images/image-1750154506807-644304229.png'),
-('b19f1825-3a15-4fa3-9d46-ab4cf9d77428', 'Hiasan Dinding 30 x 30 cm', 175000, 13, 'Produk handmade berkualitas tinggi dengan ukuran 30 x 30 cm, varian Kayu. Dibuat dengan ketelitian dan bahan premium.', '2025-06-17 09:30:10.042', '2025-06-17 10:14:29.881', NULL, 'storage/images/image-1750155269877-839246704.png'),
-('b1c31438-86a9-446e-a8fa-b3758eb6f1ce', 'PO. Clutch Mawar Pink', 190000, 47, 'Tas handmade eksklusif, varian Pink. Desain unik dan fungsional.', '2025-06-17 09:30:10.013', '2025-06-17 10:16:19.684', NULL, 'storage/images/image-1750155379681-825847136.png'),
-('b2519205-e9a1-455f-91db-949f89b8c49d', 'Totebag Daur', 295000, 24, 'Produk handmade berkualitas tinggi dengan ukuran 38 x 28 x 9 cm, varian Natural. Dibuat dengan ketelitian dan bahan premium.', '2025-06-17 09:30:10.115', '2025-06-17 10:06:55.768', NULL, 'storage/images/image-1750154815765-602235514.png'),
-('b8277a86-59af-4bca-b07e-ef5752f487f2', 'Bros Sulam', 30000, 17, 'Bros sulaman tangan dengan ukuran diameter 3 cm, varian Mawar. Detail rumit dan elegan.', '2025-06-17 09:30:10.149', '2025-06-17 09:59:59.622', NULL, 'storage/images/image-1750154399618-155283690.png'),
-('c571dc9a-e49b-47b1-8428-9a2a69cb757d', 'Tas Selempang Parang', 200000, 20, 'Tas handmade eksklusif dengan ukuran 30 x 20 x 10 cm, varian Batik Parang. Desain unik dan fungsional.', '2025-06-17 09:30:10.068', '2025-06-17 10:12:01.766', NULL, 'storage/images/image-1750155121762-654395111.png'),
-('cfef4b1f-5441-44f8-9a99-cc42b6916b8f', 'PO. Totebag Keranjang bunga', 275000, 11, 'Produk handmade berkualitas tinggi dengan ukuran 35 x 30 x 14 cm, varian Bunga Warna-warni. Dibuat dengan ketelitian dan bahan premium.', '2025-06-17 09:30:10.138', '2025-06-17 10:01:04.349', NULL, 'storage/images/image-1750154464345-839747560.png'),
-('db83b4c3-3ec2-4c4a-a884-e06d51659b2a', 'PO. Tas Selempang Love', 184500, 9, 'Tas handmade eksklusif dengan ukuran 30 x 20 x 10 cm, varian Motif Love. Desain unik dan fungsional.', '2025-06-17 09:30:10.076', '2025-06-17 10:11:23.294', NULL, 'storage/images/image-1750155083274-400736373.png'),
-('dc1b1479-72cc-4ad5-82b3-b23207ec82e3', 'Totebag Eco', 287000, 43, 'Produk handmade berkualitas tinggi dengan ukuran 30 x 32 x 12 cm, varian Hijau. Dibuat dengan ketelitian dan bahan premium.', '2025-06-17 09:30:10.126', '2025-06-17 10:05:04.664', NULL, 'storage/images/image-1750154704660-383055792.png'),
-('e7d9ab5d-254d-4e11-a779-863f2f18cfaf', 'Totebag Keranjang mawar', 275000, 28, 'Produk handmade berkualitas tinggi dengan ukuran 35 x 30 x 14 cm, varian Mawar Merah. Dibuat dengan ketelitian dan bahan premium.', '2025-06-17 09:30:10.119', '2025-06-17 10:06:29.308', NULL, 'storage/images/image-1750154789305-370718610.png'),
-('e9cfa3dd-6028-41a2-be55-97ca0e282cb7', 'PO. Mini Backpack', 190000, 34, 'Tas mini handmade eksklusif dengan ukuran 19 x 24 x 12 cm, varian Hitam. Desain unik dan fungsional.', '2025-06-17 09:30:09.945', '2025-06-17 10:20:41.547', NULL, 'storage/images/image-1750155641543-924606431.png'),
-('f1c5368b-44ec-4c47-a79b-e60431a8de35', 'PO. Clutch Keranjang Mawar', 190000, 32, 'Tas handmade eksklusif, varian Merah. Desain unik dan fungsional.', '2025-06-17 09:30:10.029', '2025-06-17 10:15:28.531', NULL, 'storage/images/image-1750155328528-727600016.png'),
-('f96c969a-9cd1-4a50-bde9-ca849b7a5aaf', 'PO. Tas Selempang Pohon', 184500, 32, 'Tas handmade eksklusif dengan ukuran 30 x 20 x 10 cm, varian Motif Pohon. Desain unik dan fungsional.', '2025-06-17 09:30:10.095', '2025-06-17 10:09:02.198', NULL, 'storage/images/image-1750154942194-307434788.png'),
-('fea51457-3a25-4f03-9a17-7c55f6771171', 'Handbag bunga liar', 295000, 28, 'Tas handmade eksklusif dengan ukuran 35 x 30 x 14 cm, varian Bunga Pastel. Desain unik dan fungsional.', '2025-06-17 09:30:10.144', '2025-06-17 10:00:25.018', NULL, 'storage/images/image-1750154425015-913766095.png');
+INSERT INTO `products` (`id`, `name`, `price`, `stock`, `description`, `image`, `createdAt`, `updatedAt`, `deletedAt`, `category_id`) VALUES
+('0015a5e6-9e3e-4f4d-9431-d5e6e9fa3c63', 'Tas Selempang 3 Kantong Blue', 200000, 23, 'Size 26 x 18 x 10 cm', 'storage/images/image33.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:47:30.957', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('03ddbeb6-5379-4be4-ae78-53d3dd32debb', 'Recycled Handbag Bunga Campuran', 300000, 25, 'Size 38 x 28 x 9 cm', 'storage/images/image30.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '352ee61b-3c10-4174-8de3-be2febd31514'),
+('0e445568-381e-4cb2-9dcd-798d6c9110a5', 'Clutch Cream Rose', 320000, 25, '19x17x10 cm', 'storage/images/image3.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '352ee61b-3c10-4174-8de3-be2febd31514'),
+('115ea7d9-be4a-4443-98dc-b3b908cbf9d6', 'Bross sulam ', 35000, 25, 'Diameter 3 cm', 'storage/images/image59.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'c73cffa2-e9dc-44ac-9ccf-fb9fdf2047da'),
+('14813ec8-536a-46b9-9119-c6829f056212', 'Tas Selempang 3 Kantong Pink', 200000, 25, 'Size 26 x 18 x 10 cm', 'storage/images/image36.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('18948ab0-befd-43b5-a085-05a00d1097d9', 'Kaligrafi Allah', 255000, 25, 'Size 30 x 30 cm', 'storage/images/image57.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'c73cffa2-e9dc-44ac-9ccf-fb9fdf2047da'),
+('2062fd97-dc34-463d-9789-bcdc1fc361ee', 'Mini Slingbag Sakura', 75000, 25, 'Size 15 x 20 cm', 'storage/images/image47.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'a413dfb5-2b46-429e-a445-a81604b5274d'),
+('22052e29-9f54-40ae-a2da-a62bcb4c2dca', 'Domper Beranak Dark Purple', 140000, 25, 'Size 16 x 15 x 6 cm', 'storage/images/image53.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'a413dfb5-2b46-429e-a445-a81604b5274d'),
+('26536b71-cb2a-417e-861f-1422da281006', 'Twin Puch Blue Tali Panjang', 115000, 25, 'Size 20 x 12,5 x 2,5 cm', 'storage/images/image50.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'a413dfb5-2b46-429e-a445-a81604b5274d'),
+('2691c4b5-5abc-4906-90be-fe1946af9e83', 'Pembatas Buku Sulam Benang', 50000, 25, 'Size 8,5 cm', 'storage/images/image62.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'c73cffa2-e9dc-44ac-9ccf-fb9fdf2047da'),
+('297c5625-91df-4541-89b5-97ce24c510aa', 'Mini Handback Sepeda', 150000, 25, 'Size 23 x18 x 8 cm', 'storage/images/image23.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '48918e9d-5eb1-4a63-a5f3-dd923420fed6'),
+('2b40ec4c-d380-4ace-93a6-3f32cf3a7fce', 'Tas Selempang Pohon Benang', 185000, 25, 'Size 30 x 20 x 10 cm', 'storage/images/image19.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('2c21d4de-2db5-4e6e-91ab-9f8279861986', 'Tas Selempang parang hitam', 200000, 25, 'Size 30 x 20 x 10 cm', 'storage/images/image10.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('2e9d5af7-8ca2-478e-9063-11360b60de5b', 'Tas Selempang Kawung Red Black', 200000, 25, 'Size 30 x 20 x 10 cm', 'storage/images/image8.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('303e916b-7ff5-4c4e-bd34-55f6038ad813', 'Twin Pouch Buket Blue', 110000, 25, 'Size 20 x 12,5 x 2,5 cm', 'storage/images/image49.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'a413dfb5-2b46-429e-a445-a81604b5274d'),
+('3276270d-c0e0-4157-976a-b50dbce2184d', 'Gantungan kunci lonjong', 40000, 25, 'Size 8,5 cm', 'storage/images/image61.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'c73cffa2-e9dc-44ac-9ccf-fb9fdf2047da'),
+('3a654ae5-487b-4bcc-bc10-f1e5f37d7e73', 'Tas Animasi Red', 185000, 25, 'Size 30 x 20 x 10 cm', 'storage/images/image15.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('4b17437f-2ae0-4c56-932f-2c495ae6d8d1', 'Dompet Gemoy Bunga Matahari', 65000, 25, 'Size 16 x 11 x 17 cm', 'storage/images/image64.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'a413dfb5-2b46-429e-a445-a81604b5274d'),
+('4cfcb75a-0779-412a-95e1-c0a3f2eb09c5', 'Tempat Pensil Brown', 40000, 25, 'Size 20 x 9,5 cm', 'storage/images/image55.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'c73cffa2-e9dc-44ac-9ccf-fb9fdf2047da'),
+('4f906d62-3a66-45ef-acd4-af9a83d0ea58', 'Mini Backpack Rose Pink', 190000, 25, 'Size19 x 24 x 12 cm', 'storage/images/image25.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '48918e9d-5eb1-4a63-a5f3-dd923420fed6'),
+('5098000e-d86e-4639-a866-52e9cf00fd67', 'Clutch Bag Pink Rose', 195000, 25, '16x19x4 cm', 'storage/images/image1.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '352ee61b-3c10-4174-8de3-be2febd31514'),
+('528fcb3b-caf0-48b4-a568-dc8cbaba732b', 'Tas Selempang Mawar Benang', 185000, 25, 'Size 30 x 20 x 10 cm', 'storage/images/image18.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('559dca0c-229f-4a68-ba78-85dc459ccc64', 'Totebag Animasi Ranting', 280000, 25, 'Size 35 x 30 x 14 cm', 'storage/images/image39.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '6c4d4954-2dd3-4c4a-abcd-04e83f28dc9c'),
+('566e4d30-84b7-424f-bfae-8e1e18535110', 'Domper Beranak Brown', 140000, 25, 'Size 16 x 15 x 6 cm', 'storage/images/image52.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'a413dfb5-2b46-429e-a445-a81604b5274d'),
+('586f219e-e1b4-43dc-b872-589075e6492b', 'Tas Animasi Blue', 185000, 25, 'Size 30 x 20 x 10 cm', 'storage/images/image14.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('60d0348e-59cd-44bd-9992-08f67bb52944', 'Dompet Gemoy Pink Flower', 65000, 25, 'Size 16 x 11 x 17 cm', 'storage/images/image66.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'a413dfb5-2b46-429e-a445-a81604b5274d'),
+('6944cfa7-f2ac-4a3c-820b-faa3ee0b484f', 'Tempat Pensil Blue', 40000, 25, 'Size 20 x 9,5 cm', 'storage/images/image54.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'c73cffa2-e9dc-44ac-9ccf-fb9fdf2047da'),
+('6a810431-e29b-4eab-9807-16cecd60e25a', 'Tas selempang Truntun Coklat', 200000, 25, 'Size 30 x 20 x 10 cm', 'storage/images/image13.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('6b86ee14-5cc2-48a1-9ce7-8b5da0ed3543', 'Ransel Bunga Anti Maling', 280000, 25, '22x35x14 cm', 'storage/images/image27.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '48918e9d-5eb1-4a63-a5f3-dd923420fed6'),
+('746ad03d-521a-46e5-a587-88051fd658d5', 'Ransel Animasi Anti Maling', 280000, 25, '22x35x14 cm', 'storage/images/image26.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '48918e9d-5eb1-4a63-a5f3-dd923420fed6'),
+('75c504d6-1016-492c-a67b-a9691d48e13f', 'Dompet Gemoy Blue Flower', 65000, 25, 'Size 16 x 11 x 17 cm', 'storage/images/image63.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'a413dfb5-2b46-429e-a445-a81604b5274d'),
+('765876e5-1347-4f14-bca5-13270b63d6cf', 'Tas Selempang Love Benang', 185000, 25, 'Size 30 x 20 x 10 cm', 'storage/images/image17.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('76c22a58-07df-4cd5-8194-630ebdab6fb1', 'Hiasan Dinding', 180000, 25, 'Size 30 x 30 cm', 'storage/images/image56.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'c73cffa2-e9dc-44ac-9ccf-fb9fdf2047da'),
+('802999e4-be94-47a4-97ea-ad9226f55db6', 'Tas Selempang Love', 185000, 25, 'Size 30 x 20 x 10 cm', 'storage/images/image9.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('81e43212-2751-43b6-b837-5156ec74eddb', 'Recycled Handbag', 300000, 25, 'Size 38 x 28 x 9 cm', 'storage/images/image16.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('8782f737-410e-4d8e-85fb-1099d0d899b2', 'Totebag Keranjang Sakura', 280000, 25, 'Size 35 x 30 x 14 cm', 'storage/images/image42.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '6c4d4954-2dd3-4c4a-abcd-04e83f28dc9c'),
+('8aefaf19-3ed8-4e1b-b276-8ed6c73bb063', 'Clutch bag rose', 290000, 25, '22x12x5 cm', 'storage/images/image6.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '352ee61b-3c10-4174-8de3-be2febd31514'),
+('9947c867-9e57-46c7-afd9-d48c66754afb', 'Handbag Bunga Liar Green', 295000, 25, 'Size 35 x 30 x 14 cm', 'storage/images/image31.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '352ee61b-3c10-4174-8de3-be2febd31514'),
+('9e6a6303-e48d-4c19-b5d7-b2fb39048dd5', 'Mini Backpack Bunga', 190000, 25, 'Size19 x 24 x 12 cm', 'storage/images/image20.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '48918e9d-5eb1-4a63-a5f3-dd923420fed6'),
+('a27d4f4d-3a55-4a0b-a05e-2cfacb51fe55', 'Clutch bag silver rose', 320000, 25, '19x17x10 cm', 'storage/images/image4.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '352ee61b-3c10-4174-8de3-be2febd31514'),
+('a5a4d0a8-663c-4445-a147-adcc9e187ede', 'Tas Selempang 3 Kantong Black', 200000, 25, 'Size 26 x 18 x 10 cm', 'storage/images/image34.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('b2365cfd-3d14-4bc2-9910-26c3e70280bd', 'Mini Slingbag Keranjang Bunga', 75000, 25, 'Size 15 x 20 cm', 'storage/images/image45.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'a413dfb5-2b46-429e-a445-a81604b5274d'),
+('b339305c-20d4-409f-a2aa-e31fa1715995', 'Totebag Keranjang Mawar', 280000, 25, 'Size 35 x 30 x 14 cm', 'storage/images/image41.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '6c4d4954-2dd3-4c4a-abcd-04e83f28dc9c'),
+('b9cee993-d2bd-4fe5-ab1e-5587c6978fa2', 'Kaligrafi Muhammad', 255000, 25, 'Size 30 x 30 cm', 'storage/images/image58.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'c73cffa2-e9dc-44ac-9ccf-fb9fdf2047da'),
+('bcea084e-6d80-4189-a677-65daa2e0caec', 'Dompet Beranak Blue', 140000, 25, 'Size 16 x 15 x 6 cm', 'storage/images/image51.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'a413dfb5-2b46-429e-a445-a81604b5274d'),
+('bfde587e-cada-4eab-9b64-0772c0e93a86', 'Mini Slingbag Brown', 75000, 25, 'Size 15 x 20 cm', 'storage/images/image44.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'a413dfb5-2b46-429e-a445-a81604b5274d'),
+('bff45a4c-6f5e-4779-8c9c-8698238531da', 'Mini Backpack Sepeda', 190000, 25, 'Size19 x 24 x 12 cm', 'storage/images/image22.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '48918e9d-5eb1-4a63-a5f3-dd923420fed6'),
+('c257b81d-fdef-4d38-a751-0a6b70b08f30', 'Mini Slingbag Pink', 75000, 25, 'Size 15 x 20 cm', 'storage/images/image46.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'a413dfb5-2b46-429e-a445-a81604b5274d'),
+('c88ccc50-dd71-41f3-a151-5001fb97f5a4', 'Totebag Animasi Bunga', 280000, 25, 'Size 35 x 30 x 14 cm', 'storage/images/image38.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '6c4d4954-2dd3-4c4a-abcd-04e83f28dc9c'),
+('cb1df992-c264-4205-9103-a8ca69a01834', 'Tas Selempang Kawung Green Black', 200000, 25, 'Size 30 x 20 x 10 cm', 'storage/images/image7.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('cd9d351b-a984-4213-95a6-1a29038cf348', 'Tas Selempang 3 Kantong Red', 200000, 25, 'Size 26 x 18 x 10 cm', 'storage/images/image37.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('cf3ec1aa-0f0f-42d7-a521-b7ae2aabdc77', 'Ransel Sakura Anti Maling', 280000, 25, '22x35x14 cm', 'storage/images/image28.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '48918e9d-5eb1-4a63-a5f3-dd923420fed6'),
+('d0859889-f243-4ef2-b3a3-e97b7499d84b', 'Tas Selempang Sakura Pink', 185000, 25, 'Size 30 x 20 x 10 cm', 'storage/images/image12.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('d713f662-8a15-4239-92f9-93aece11c3d0', 'Mini Slingbag Bunga Matahari', 75000, 25, 'Size 15 x 20 cm', 'storage/images/image43.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'a413dfb5-2b46-429e-a445-a81604b5274d'),
+('dae9ed9c-1de0-43e0-bfb1-927adf2c9f20', 'Tas Selempang 3 Kantong Brown', 200000, 25, 'Size 26 x 18 x 10 cm', 'storage/images/image35.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('e16ebef7-7565-4fa1-a404-ea786e0365b7', 'Dompet Gemoy Bunga Matahari', 65000, 25, 'Size 16 x 11 x 17 cm', 'storage/images/image65.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'a413dfb5-2b46-429e-a445-a81604b5274d'),
+('e1bf0b55-9e26-46b4-a245-c75324aa0f7e', 'Mini Backpack Ranting', 190000, 25, 'Size19 x 24 x 12 cm', 'storage/images/image21.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '48918e9d-5eb1-4a63-a5f3-dd923420fed6'),
+('eb2dc356-020e-4f44-8d7f-62d2698b8053', 'Twin Pouch Sakura', 115000, 25, 'Size 20 x 12,5 x 2,5 cm', 'storage/images/image48.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'a413dfb5-2b46-429e-a445-a81604b5274d'),
+('ef87442e-009a-44da-8e9d-7ca1ff16c5a7', 'Mini Handback Bunga', 150000, 25, 'Size 23 x 18 x 8 cm', 'storage/images/image24.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '48918e9d-5eb1-4a63-a5f3-dd923420fed6'),
+('f1fc0601-957f-4e05-8325-b08e5147d076', 'Gantungan kunci bulat', 45000, 25, 'Size 8,5 cm', 'storage/images/image60.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, 'c73cffa2-e9dc-44ac-9ccf-fb9fdf2047da'),
+('f31bb960-3f3d-41a2-bf44-4f3b0aca7f16', 'Totebag Buket Bunga', 290000, 25, 'Size 30 x 32 x 12 cm', 'storage/images/image40.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '6c4d4954-2dd3-4c4a-abcd-04e83f28dc9c'),
+('f41eca91-fb10-43ee-8d59-d41150525dea', 'Clutch Keranjang mawar', 195000, 25, '16x19x4 cm', 'storage/images/image2.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '352ee61b-3c10-4174-8de3-be2febd31514'),
+('faca68fd-14aa-43ba-935f-37d77ee560d2', 'Handbag Bunga Liar Brown', 295000, 25, 'Size 35 x 30 x 14 cm', 'storage/images/image32.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '352ee61b-3c10-4174-8de3-be2febd31514'),
+('fb4eb9bd-a6ef-4137-929c-72f597c6254f', 'Tas Selempang Sakura Purple', 185000, 25, 'Size 30 x 20 x 10 cm', 'storage/images/image11.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '3af21147-6886-48a0-a6d6-197b949b1f9e'),
+('fcec3c30-1037-4047-9a08-46e46b154ad5', 'Clutch bag red rose', 200000, 25, '18x10x5 cm', 'storage/images/image5.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '352ee61b-3c10-4174-8de3-be2febd31514'),
+('fef6a715-648d-4404-952b-bb8893968e4c', 'Recycled Handbag Bunga batik', 265000, 25, 'Size 38 x 28 x 9 cm', 'storage/images/image29.jpeg', '2025-09-27 04:39:09.783', '2025-09-27 04:39:09.783', NULL, '352ee61b-3c10-4174-8de3-be2febd31514');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `transactions`
+-- Struktur dari tabel `transactions`
 --
 
-CREATE TABLE IF NOT EXISTS `transactions` (
-  `id` varchar(191) NOT NULL,
-  `user_id` varchar(191) NOT NULL,
-  `total_price` int(11) NOT NULL,
-  `status` enum('pending','success','failed') NOT NULL DEFAULT 'pending',
-  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
-  `updatedAt` datetime(3) NOT NULL,
-  `code` varchar(191) NOT NULL,
-  `payment_status` enum('pending','success') NOT NULL DEFAULT 'pending',
-  `shipping_status` enum('pending','success') NOT NULL DEFAULT 'pending',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `transactions_code_key` (`code`),
-  KEY `transactions_user_id_fkey` (`user_id`)
+CREATE TABLE `transactions` (
+  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `total_price` int NOT NULL,
+  `status` enum('pending','success','failed') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `shipping_status` enum('pending','success','failed') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `shipping_number` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `updatedAt` datetime(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `transactions`
+--
+
+INSERT INTO `transactions` (`id`, `code`, `user_id`, `total_price`, `status`, `shipping_status`, `shipping_number`, `createdAt`, `updatedAt`) VALUES
+('914f9c48-7780-43f5-aeb6-b4996d0dc4b3', 'ORD-8B0', '53a3394b-b7b1-4f2e-b9d6-fe379e0d4afe', 400000, 'pending', 'pending', NULL, '2025-09-27 04:47:30.943', '2025-09-27 04:47:30.943');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `transaction_details`
+-- Struktur dari tabel `transaction_details`
 --
 
-CREATE TABLE IF NOT EXISTS `transaction_details` (
-  `id` varchar(191) NOT NULL,
-  `transaction_id` varchar(191) NOT NULL,
-  `product_id` varchar(191) NOT NULL,
-  `price` int(11) NOT NULL,
-  `qty` int(11) NOT NULL,
-  `sub_total` int(11) NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
-  `updatedAt` datetime(3) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `transaction_details_transaction_id_fkey` (`transaction_id`),
-  KEY `transaction_details_product_id_fkey` (`product_id`)
+CREATE TABLE `transaction_details` (
+  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `transaction_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `product_id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `price` int NOT NULL,
+  `qty` int NOT NULL,
+  `sub_total` int NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `updatedAt` datetime(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `transaction_details`
+--
+
+INSERT INTO `transaction_details` (`id`, `transaction_id`, `product_id`, `price`, `qty`, `sub_total`, `createdAt`, `updatedAt`) VALUES
+('11f0b4c1-069b-418c-9d7f-3700ddbfcc45', '914f9c48-7780-43f5-aeb6-b4996d0dc4b3', '0015a5e6-9e3e-4f4d-9431-d5e6e9fa3c63', 200000, 2, 400000, '2025-09-27 04:47:30.943', '2025-09-27 04:47:30.943');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Struktur dari tabel `users`
 --
 
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` varchar(191) NOT NULL,
-  `name` varchar(150) NOT NULL,
-  `email` varchar(40) NOT NULL,
-  `password` varchar(191) NOT NULL,
-  `photo` text DEFAULT NULL,
-  `role` enum('user','admin') NOT NULL DEFAULT 'user',
-  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+CREATE TABLE `users` (
+  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `photo` text COLLATE utf8mb4_unicode_ci,
+  `role` enum('user','admin') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'user',
+  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   `updatedAt` datetime(3) NOT NULL,
-  `deletedAt` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `users_email_key` (`email`)
+  `deletedAt` datetime(3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `users`
+-- Dumping data untuk tabel `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `photo`, `role`, `createdAt`, `updatedAt`, `deletedAt`) VALUES
-('3bac99a6-d524-4c08-8301-04a8f9fc6e7c', 'Admin', 'admin@example.com', '$2b$10$r0hVmNcbr56nGWhyPH71EOG0CrS/ay.kv6WEAA7BSwfvJYUti5tJW', NULL, 'admin', '2025-06-17 09:30:09.915', '2025-06-17 09:30:09.915', NULL),
-('53a3394b-b7b1-4f2e-b9d6-fe379e0d4afe', 'User', 'user@example.com', '$2b$10$r0hVmNcbr56nGWhyPH71EOG0CrS/ay.kv6WEAA7BSwfvJYUti5tJW', NULL, 'user', '2025-06-17 09:30:09.915', '2025-06-17 09:30:09.915', NULL);
+('3bac99a6-d524-4c08-8301-04a8f9fc6e7c', 'Admin', 'admin@example.com', '$2b$10$ZJOEp518r9Og3fk8zFI1KOsuqsUTcEFgGUdtec/1S0ni7kbLZ.SfO', NULL, 'admin', '2025-06-17 09:30:09.915', '2025-06-17 09:30:09.915', NULL),
+('53a3394b-b7b1-4f2e-b9d6-fe379e0d4afe', 'User', 'user@example.com', '$2b$10$5yCZ7u5A3pyiASN8.qoH..nWxXDeJWJn4F.K4tg73AKKK58atQAAm', NULL, 'user', '2025-06-17 09:30:09.915', '2025-06-17 09:30:09.915', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `_prisma_migrations`
+-- Struktur dari tabel `_prisma_migrations`
 --
 
-CREATE TABLE IF NOT EXISTS `_prisma_migrations` (
-  `id` varchar(36) NOT NULL,
-  `checksum` varchar(64) NOT NULL,
+CREATE TABLE `_prisma_migrations` (
+  `id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `checksum` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   `finished_at` datetime(3) DEFAULT NULL,
-  `migration_name` varchar(255) NOT NULL,
-  `logs` text DEFAULT NULL,
+  `migration_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `logs` text COLLATE utf8mb4_unicode_ci,
   `rolled_back_at` datetime(3) DEFAULT NULL,
-  `started_at` datetime(3) NOT NULL DEFAULT current_timestamp(3),
-  `applied_steps_count` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`)
+  `started_at` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `applied_steps_count` int UNSIGNED NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `_prisma_migrations`
+-- Dumping data untuk tabel `_prisma_migrations`
 --
 
 INSERT INTO `_prisma_migrations` (`id`, `checksum`, `finished_at`, `migration_name`, `logs`, `rolled_back_at`, `started_at`, `applied_steps_count`) VALUES
-('07733c6a-4804-4268-87fa-8ea455b59d35', '3677751d013543e80a1f440949956e6bcb514d11266f129a39c1d6c7f0adb9bc', '2025-06-17 08:07:38.282', '20250615074546_add_other_status', NULL, NULL, '2025-06-17 08:07:38.275', 1),
-('1fe9611b-bea7-4960-be23-c3d35d4b7c71', 'cdd30fe50eaf034264480df540afd78c89c3e423ae0bfa8a502606e67959adfc', '2025-06-17 08:07:38.245', '20250512071620_add_column_image_in_products', NULL, NULL, '2025-06-17 08:07:38.237', 1),
-('2fff3041-e863-42e9-bc5e-0ee010125538', 'a7996ea692f47c605e66a2a88d8741faf69dd4f7920dccdc97d2907aadd67d78', '2025-06-17 08:07:38.274', '20250524131130_add_transaction_code', NULL, NULL, '2025-06-17 08:07:38.259', 1),
-('ad2fb276-6bc4-4d98-8168-c33ac88997ef', '7f7953c99d8413a9ad7d883d9afe09da7c705282b6e41b3d388e5b8f3c46c0aa', '2025-06-17 08:07:38.258', '20250522130329_drop_table_password_reset_token', NULL, NULL, '2025-06-17 08:07:38.245', 1),
-('e7c3034d-dca3-4464-9fc7-f66afdb1d526', '868a0be1b10371955bac3810a4359b8d9e69066436a2f2dc96c304d72caad501', '2025-06-17 08:07:38.236', '20250512065100_init_db', NULL, NULL, '2025-06-17 08:07:38.073', 1);
+('2bbc8f9a-ad8c-4d0c-9964-855d3d574b76', '65e1ea0e1b3cd90e0244a557850031b9f1d56a33a397bb28c017e852c018ce80', '2025-09-27 04:39:04.581', '20250626091609_add_category_table', NULL, NULL, '2025-09-27 04:39:04.487', 1),
+('9466ef9d-f71b-4557-a663-a91aad0d3477', '05b18dabd1b4e2dc4ce415037f8b84929e7a0a20941009f81429d340fad0df55', '2025-09-27 04:39:04.485', '20250619105450_new_db', NULL, NULL, '2025-09-27 04:39:04.174', 1);
 
 --
--- Constraints for dumped tables
+-- Indexes for dumped tables
 --
 
 --
--- Constraints for table `carts`
+-- Indeks untuk tabel `carts`
 --
 ALTER TABLE `carts`
-  ADD CONSTRAINT `carts_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `carts_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE;
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `carts_user_id_fkey` (`user_id`),
+  ADD KEY `carts_product_id_fkey` (`product_id`);
 
 --
--- Constraints for table `transactions`
+-- Indeks untuk tabel `category`
+--
+ALTER TABLE `category`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `products_category_id_fkey` (`category_id`);
+
+--
+-- Indeks untuk tabel `transactions`
 --
 ALTER TABLE `transactions`
-  ADD CONSTRAINT `transactions_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE;
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `transactions_code_key` (`code`),
+  ADD KEY `transactions_user_id_fkey` (`user_id`);
 
 --
--- Constraints for table `transaction_details`
+-- Indeks untuk tabel `transaction_details`
 --
 ALTER TABLE `transaction_details`
-  ADD CONSTRAINT `transaction_details_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `transaction_details_transaction_id_fkey` FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`id`) ON UPDATE CASCADE;
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `transaction_details_transaction_id_fkey` (`transaction_id`),
+  ADD KEY `transaction_details_product_id_fkey` (`product_id`);
+
+--
+-- Indeks untuk tabel `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_email_key` (`email`);
+
+--
+-- Indeks untuk tabel `_prisma_migrations`
+--
+ALTER TABLE `_prisma_migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+--
+
+--
+-- Ketidakleluasaan untuk tabel `carts`
+--
+ALTER TABLE `carts`
+  ADD CONSTRAINT `carts_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  ADD CONSTRAINT `carts_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `products`
+--
+ALTER TABLE `products`
+  ADD CONSTRAINT `products_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `transactions`
+--
+ALTER TABLE `transactions`
+  ADD CONSTRAINT `transactions_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `transaction_details`
+--
+ALTER TABLE `transaction_details`
+  ADD CONSTRAINT `transaction_details_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  ADD CONSTRAINT `transaction_details_transaction_id_fkey` FOREIGN KEY (`transaction_id`) REFERENCES `transactions` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
