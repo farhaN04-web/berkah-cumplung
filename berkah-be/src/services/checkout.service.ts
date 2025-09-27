@@ -96,7 +96,6 @@ export class CheckoutService {
               return acc + (product ? product.price * item.qty : 0);
             }, 0),
             status: Status.pending,
-            shipping_status: Status.pending,
             TransactionDetails: {
               create: cartItems.map((item) => ({
                 product_id: item.product_id,
@@ -190,8 +189,6 @@ export class CheckoutService {
       userId: transaction.user_id,
       total: transaction.total_price,
       status: transaction.status,
-      shipping_status: transaction.shipping_status,
-      shipping_number: transaction.shipping_number,
       createdAt: transaction.createdAt,
       updatedAt: transaction.updatedAt,
       TransactionDetails: transaction.TransactionDetails.map((detail) => ({
