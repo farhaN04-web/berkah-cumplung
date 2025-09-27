@@ -47,7 +47,7 @@ export function useUpdateOrderStatus() {
   const qc = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (request: UpdateOrderStatusDTO) => {
+    mutationFn: (request: { id: string } & UpdateOrderStatusDTO) => {
       return toast.promise(adminOrderService.updateOrderStatus(request), {
         loading: "Memperbarui status pesanan...",
         success: (response) =>
@@ -61,6 +61,7 @@ export function useUpdateOrderStatus() {
         },
       });
     },
+
     onSuccess: () => {
       qc.invalidateQueries({
         queryKey: QueryKeys.Admin.Orders.all,

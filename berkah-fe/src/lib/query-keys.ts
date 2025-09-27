@@ -50,6 +50,7 @@ export const QueryKeys = {
     all: ["products", "list"],
     detail: (id: string) => [...QueryKeys.Products.all, id],
   },
+  // Category related query keys
   Categories: {
     all: ["categories"],
   },
@@ -66,7 +67,7 @@ export const QueryKeys = {
 
   // Order history related query keys
   OrderHistory: {
-    all: ["history"],
+    all: ["order-history"],
   },
 
   // Dashboard related query keys
