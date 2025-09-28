@@ -10,52 +10,51 @@ import {
 import { ApiResponse } from "@/types";
 
 class AuthService {
+  /**
+   * Mengirim request login ke server.
+   * @param request - Data email dan password
+   */
   async login(request: LoginDTO) {
-    const response = await httpClient.post<
-      ApiResponse<LoginResponse, undefined, undefined>
-    >("/auth/login/", request, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    return response;
+    const response = await httpClient.post<ApiResponse<LoginResponse>>(
+      "/auth/login",
+      request
+    );
+    return response.data;
   }
 
+  /**
+   * Mengirim request registrasi akun baru ke server.
+   * @param request - Data nama, email, dan password
+   */
   async register(request: RegisterDTO) {
-    const response = await httpClient.post<
-      ApiResponse<RegisterResponse, undefined, undefined>
-    >("/auth/register", request, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
+    const response = await httpClient.post<ApiResponse<RegisterResponse>>(
+      "/auth/register",
+      request
+    );
     return response;
   }
 
-  async forgotPassword(request: ForgotPasswordDTO) {
-    const response = await httpClient.post<
-      ApiResponse<undefined, undefined, undefined>
-    >("/auth/forgot-password", request, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
+  /**
+   * Memeriksa apakah email terdaftar di database.
+   * @param request - Data email yang akan diperiksa
+   */
+  async checkEmail(request: ForgotPasswordDTO) {
+    const response = await httpClient.post<ApiResponse<{ email: string }>>(
+      "/auth/check-email",
+      request
+    );
     return response;
   }
 
-  // Fungsi baru ditambahkan di sini
+  /**
+   * Mengirim request untuk mereset password dengan password baru.
+   * @param request - Data email dan password baru
+   */
   async resetPassword(request: ResetPasswordDTO) {
-    const response = await httpClient.post<
-      ApiResponse<undefined, undefined, undefined>
-    >("/auth/reset-password", request, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
+    const response = await httpClient.post<ApiResponse<undefined>>(
+      "/auth/reset-password",
+      request
+    );
     return response;
   }
 }

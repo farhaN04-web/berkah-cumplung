@@ -1,3 +1,9 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,20 +16,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { useResetPassword } from "@/hooks/useAuth";
 import { resetPasswordSchema } from "@/schemas/auth";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { z } from "zod";
+import { ResponseError } from "@/types";
 
-export const ResetPasswordForm = () => {
+// Tipe data form berdasarkan skema Zod
+type FormData = z.infer<typeof resetPasswordSchema>;
+
+// Komponen menerima prop 'email'
+interface ResetPasswordFormProps {
+  email: string;
+}
+
+export const ResetPasswordForm = ({ email }: ResetPasswordFormProps) => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const token = searchParams.get("token");
 
-  const { mutate: resetPassword, isLoading } = useResetPassword();
-
-  const form = useForm<z.infer<typeof resetPasswordSchema>>({
+  // Inisialisasi form dengan react-hook-form dan zodResolver
+  const form = useForm<FormData>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
       password: "",
@@ -31,19 +38,27 @@ export const ResetPasswordForm = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof resetPasswordSchema>) => {
-    if (!token) {
-      form.setError("root", {
-        type: "manual",
-        message: "Token tidak valid atau telah kedaluwarsa.",
-      });
-      return;
-    }
+  // Menggunakan custom hook untuk mutasi reset password
+  const { mutate: resetPassword, isPending } = useResetPassword();
+
+  // Fungsi yang dijalankan saat form disubmit
+  const onSubmit = (data: FormData) => {
+    // Panggil mutasi dengan data password baru dan email dari prop
     resetPassword(
-      { ...data, token },
+      { ...data, email },
       {
         onSuccess: () => {
+          toast.success("Kata sandi berhasil diubah!", {
+            description: "Silakan masuk dengan kata sandi baru Anda.",
+          });
+          // Jika berhasil, arahkan pengguna ke halaman login
           navigate("/login");
+        },
+        onError: (error) => {
+          const err = error as ResponseError;
+          toast.error(
+            err.response?.message || "Gagal mengubah kata sandi."
+          );
         },
       }
     );
@@ -59,7 +74,12 @@ export const ResetPasswordForm = () => {
             <FormItem>
               <FormLabel>Kata Sandi Baru</FormLabel>
               <FormControl>
-                <Input type="password" {...field} />
+                <Input
+                  type="password"
+                  placeholder="******"
+                  {...field}
+                  disabled={isPending}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -70,22 +90,21 @@ export const ResetPasswordForm = () => {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Konfirmasi Kata Sandi</FormLabel>
+              <FormLabel>Konfirmasi Kata Sandi Baru</FormLabel>
               <FormControl>
-                <Input type="password" {...field} />
+                <Input
+                  type="password"
+                  placeholder="******"
+                  {...field}
+                  disabled={isPending}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        {form.formState.errors.root && (
-          <p className="text-sm font-medium text-destructive">
-            {form.formState.errors.root.message}
-          </p>
-        )}
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Reset Kata Sandi
+        <Button type="submit" className="w-full" disabled={isPending}>
+          {isPending ? "Menyimpan..." : "Simpan Kata Sandi Baru"}
         </Button>
       </form>
     </Form>

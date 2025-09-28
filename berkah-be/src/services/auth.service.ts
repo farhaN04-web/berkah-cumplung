@@ -10,12 +10,10 @@ import {
 import { UserResponseDto } from "./../dto/user.dto";
 import { normalizeGmail } from "./../utils/helper.util";
 import { JWT } from "./../utils/jwt.util";
-import { Mailer } from "./../utils/mailer.util";
 import { Password } from "./../utils/password.util";
 import { ResponseError } from "./../utils/response.util";
 import { AuthSchema } from "./../validation/auth.schema";
 import { Validation } from "./../validation/validation";
-import crypto from "crypto";
 
 export class AuthService {
   // Registering a user
@@ -26,7 +24,7 @@ export class AuthService {
     );
 
     // normalize the email
-    request.email = normalizeGmail(request.email);
+    registerRequest.email = normalizeGmail(registerRequest.email);
 
     // check if the user already exists
     const existingUser = await prismaClient.users.findUnique({
@@ -39,7 +37,7 @@ export class AuthService {
     });
 
     if (existingUser) {
-      throw new ResponseError("error", 400, "User already exists");
+      throw new ResponseError("error", 400, "User with this email already exists");
     }
 
     // hash the password
@@ -48,7 +46,7 @@ export class AuthService {
     );
 
     // register the user
-    const registerUser = await prismaClient.users.create({
+    const newUser = await prismaClient.users.create({
       data: {
         name: registerRequest.name,
         email: registerRequest.email,
@@ -58,17 +56,14 @@ export class AuthService {
     });
 
     return {
-      name: registerUser.name,
-      email: registerUser.email,
-      role: registerUser.role,
+      name: newUser.name,
+      email: newUser.email,
+      role: newUser.role,
     };
   }
 
-  // Login
-  static async login(
-    request: LoginDto,
-    path: string
-  ): Promise<LoginResponseDto> {
+  // Login a user
+  static async login(request: LoginDto): Promise<LoginResponseDto> {
     const loginRequest: LoginDto = Validation.validate(
       AuthSchema.LOGIN,
       request
@@ -81,7 +76,7 @@ export class AuthService {
     });
 
     if (!registeredUser) {
-      throw new ResponseError("error", 400, "Invalid email or password");
+      throw new ResponseError("error", 401, "Invalid email or password");
     }
 
     // password check
@@ -91,7 +86,7 @@ export class AuthService {
     );
 
     if (!isPasswordMatched) {
-      throw new ResponseError("error", 400, "Invalid email or password");
+      throw new ResponseError("error", 401, "Invalid email or password");
     }
 
     const token = JWT.generateToken(registeredUser.id);
@@ -107,37 +102,55 @@ export class AuthService {
     };
   }
 
-  // Forgot Password
-  static async forgotPassword(request: ForgotPasswordDto): Promise<void> {
-    const forgotPasswordRequest: ForgotPasswordDto = Validation.validate(
-      AuthSchema.FORGOT_PASSWORD,
-      request
-    );
+  /**
+   * Cek apakah email pengguna ada di database.
+   * @param request - DTO yang hanya berisi email
+   * @returns Mengembalikan email jika ditemukan
+   */
+  static async checkEmail(request: ForgotPasswordDto): Promise<{ email: string }> {
+    const { email } = Validation.validate(AuthSchema.FORGOT_PASSWORD, request);
+
     const user = await prismaClient.users.findUnique({
-      where: {
-        email: forgotPasswordRequest.email,
-      },
+      where: { email },
     });
 
     if (!user) {
-      throw new ResponseError("error", 400, "User not found");
+      throw new ResponseError("error", 404, "Email not found in our records");
     }
 
-    const token = crypto.randomBytes(8).toString("hex");
+    return { email: user.email };
+  }
 
-    const hashedToken = await Password.hashPassword(token);
+  /**
+   * Mereset password pengguna berdasarkan email.
+   * @param request - DTO yang berisi email dan password baru
+   */
+  static async resetPassword(request: ResetPasswordDto): Promise<void> {
+    const { email, password } = Validation.validate(
+      AuthSchema.RESET_PASSWORD,
+      request
+    );
 
+    // Verifikasi sekali lagi bahwa pengguna benar-benar ada
+    const user = await prismaClient.users.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new ResponseError("error", 404, "User not found");
+    }
+
+    // Hash password baru
+    const hashedPassword = await Password.hashPassword(password);
+
+    // Update password di database
     await prismaClient.users.update({
       where: {
         id: user.id,
       },
       data: {
-        password: hashedToken,
+        password: hashedPassword,
       },
     });
-
-    await Mailer.sendPasswordResetEmail(user.email, user.name, token);
-
-    return;
   }
 }

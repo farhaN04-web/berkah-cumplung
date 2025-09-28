@@ -1,35 +1,41 @@
+// Lokasi: berkah-fe/src/hooks/useAuth.ts
+
 import { useSession } from "@/hooks/useSession";
+import { QueryKeys } from "@/lib/query-keys";
 import { authService } from "@/server/api/auth.service";
 import {
   ForgotPasswordDTO,
   LoginDTO,
+  LoginResponse,
   RegisterDTO,
-  ResetPasswordDTO, // 1. Impor DTO yang diperlukan
+  RegisterResponse,
+  ResetPasswordDTO,
 } from "@/server/dto/auth.dto";
-import { QueryKeys } from "@/lib/query-keys";
-import { ResponseError, Session } from "@/types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { ApiResponse, ResponseError, Session } from "@/types";
+import {
+  useMutation,
+  UseMutationOptions, // 1. Impor UseMutationOptions
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
+/**
+ * Hook untuk menangani proses login pengguna.
+ */
 export const useSignIn = () => {
   const { signIn: setSession } = useSession();
 
-  const mutation = useMutation({
-    mutationFn: (request: LoginDTO) => {
-      return toast.promise(authService.login(request), {
-        loading: "Loading...",
-        success: (response) => response.message || "Login berhasil!",
-        error: (error: ResponseError) => {
-          return (
-            error.response?.message || error.message || "Gagal untuk login"
-          );
-        },
-      });
-    },
-
-    onSuccess: async (response) => {
-      if (response.status === "success") {
+  // 2. Definisikan semua options di dalam variabel terpisah
+  const mutationOptions: UseMutationOptions<
+    ApiResponse<LoginResponse>,
+    ResponseError,
+    LoginDTO
+  > = {
+    mutationFn: authService.login,
+    onSuccess: (response) => {
+      toast.success(response.message || "Login berhasil!");
+      if (response.status === "success" && response.data) {
         const sessionData: Session = {
           token: response.data.token,
           user: {
@@ -39,136 +45,90 @@ export const useSignIn = () => {
             role: response.data.user.role as "user" | "admin",
           },
         };
-        await setSession(sessionData);
+        setSession(sessionData, {});
       }
     },
-  });
-
-  return {
-    ...mutation,
-    isPending: mutation.isPending,
-    isSuccess: mutation.isSuccess,
-    isError: mutation.isError,
-    error: mutation.error,
-    errorMessage: mutation.error
-      ? (mutation.error as ResponseError).response?.message ||
-        (mutation.error as Error).message ||
-        "Gagal untuk login"
-      : undefined,
+    onError: (error) => {
+      toast.error(error.response?.message || "Gagal untuk login");
+    },
   };
+
+  return useMutation(mutationOptions); // 3. Panggil useMutation dengan options tersebut
 };
 
+/**
+ * Hook untuk menangani proses logout pengguna.
+ */
 export const useSignOut = () => {
   const { signOut: removeSession } = useSession();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const signOut = async (callbackURL?: string) => {
+  const signOut = async (callbackURL: string = "/login") => {
     await removeSession();
-    if (callbackURL) {
-      requestAnimationFrame(() => {
-        navigate(callbackURL);
-      });
-    }
+    queryClient.clear();
+    navigate(callbackURL);
   };
 
   return signOut;
 };
 
+/**
+ * Hook untuk menangani proses registrasi pengguna baru.
+ */
 export const useSignUp = () => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
-    mutationFn: (request: RegisterDTO) => {
-      return toast.promise(authService.register(request), {
-        loading: "Loading...",
-        success: (response) => response.message || "Register berhasil!",
-        error: (error: ResponseError) => {
-          return (
-            error.response?.message || error.message || "Gagal untuk register"
-          );
-        },
-      });
-    },
-    onSuccess: () => {
+  const mutationOptions: UseMutationOptions<
+    ApiResponse<RegisterResponse>,
+    ResponseError,
+    RegisterDTO
+  > = {
+    mutationFn: authService.register,
+    onSuccess: (response) => {
+      toast.success(response.message || "Register berhasil!");
       queryClient.invalidateQueries({ queryKey: QueryKeys.User.All });
     },
-  });
-
-  return {
-    ...mutation,
-    isPending: mutation.isPending,
-    isSuccess: mutation.isSuccess,
-    isError: mutation.isError,
-    error: mutation.error,
-    errorMessage: mutation.error
-      ? (mutation.error as ResponseError).response?.message ||
-        (mutation.error as Error).message ||
-        "Gagal untuk register"
-      : undefined,
-  };
-};
-
-export const useForgotPassword = () => {
-  const mutation = useMutation({
-    mutationFn: (request: ForgotPasswordDTO) => {
-      return toast.promise(authService.forgotPassword(request), {
-        loading: "Loading...",
-        success: (response) =>
-          response.message || "Email untuk reset password telah dikirim!",
-        error: (error: ResponseError) => {
-          return (
-            error.response?.message ||
-            error.message ||
-            "Gagal mengirim email reset"
-          );
-        },
-      });
+    onError: (error) => {
+      toast.error(error.response?.message || "Gagal untuk register");
     },
-  });
-
-  return {
-    ...mutation,
-    isLoading: mutation.isPending,
-    isSuccess: mutation.isSuccess,
-    isError: mutation.isError,
-    error: mutation.error,
-    errorMessage: mutation.error
-      ? (mutation.error as ResponseError).response?.message ||
-        (mutation.error as Error).message ||
-        "Gagal untuk forgot password"
-      : undefined,
   };
+
+  return useMutation(mutationOptions);
 };
 
-// 2. Tambahkan hook baru di sini
+/**
+ * Hook untuk memeriksa apakah email terdaftar di sistem.
+ */
+export function useCheckEmail() {
+  const mutationOptions: UseMutationOptions<
+    ApiResponse<{ email: string }>,
+    ResponseError,
+    ForgotPasswordDTO
+  > = {
+    mutationFn: authService.checkEmail,
+  };
+
+  return useMutation(mutationOptions);
+}
+
+/**
+ * Hook untuk mengirimkan password baru ke server.
+ */
 export const useResetPassword = () => {
-  const mutation = useMutation({
-    mutationFn: (request: ResetPasswordDTO) => {
-      return toast.promise(authService.resetPassword(request), {
-        loading: "Menyimpan kata sandi baru...",
-        success: (response) =>
-          response.message || "Kata sandi berhasil diubah!",
-        error: (error: ResponseError) => {
-          return (
-            error.response?.message ||
-            error.message ||
-            "Gagal mengubah kata sandi"
-          );
-        },
-      });
+  const mutationOptions: UseMutationOptions<
+    ApiResponse<null>,
+    ResponseError,
+    ResetPasswordDTO
+  > = {
+    mutationFn: authService.resetPassword,
+    onSuccess: (response) => {
+      toast.success(response.message || "Kata sandi berhasil diubah!");
     },
-  });
-
-  return {
-    ...mutation,
-    isLoading: mutation.isPending,
-    isSuccess: mutation.isSuccess,
-    isError: mutation.isError,
-    error: mutation.error,
-    errorMessage: mutation.error
-      ? (mutation.error as ResponseError).response?.message ||
-        (mutation.error as Error).message ||
-        "Gagal mengubah kata sandi"
-      : undefined,
+    onError: (error) => {
+      toast.error(error.response?.message || "Gagal mengubah kata sandi");
+    },
   };
+
+  return useMutation(mutationOptions);
 };

@@ -1,3 +1,4 @@
+import { NextFunction, Request, Response } from "express";
 import {
   ForgotPasswordDto,
   LoginDto,
@@ -8,86 +9,108 @@ import {
 import { BaseResponseDto } from "./../dto/base.dto";
 import { UserResponseDto } from "./../dto/user.dto";
 import { AuthService } from "./../services/auth.service";
-import { NextFunction, Request, Response } from "express";
 
 export class AuthController {
   /**
-   * Login and Registration Routes
+   * Controller untuk mendaftarkan pengguna baru.
    */
-
-  // Controller for register user
   static async register(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const request: RegisterDto = req.body as RegisterDto;
-      const response = await AuthService.register(request);
+      const request: RegisterDto = req.body;
+      const data = await AuthService.register(request);
 
-      const result: BaseResponseDto<UserResponseDto> = {
+      const response: BaseResponseDto<UserResponseDto> = {
         status: "success",
         code: 201,
-        message: "User Registered Successfully !",
-        data: response,
+        message: "Pengguna berhasil terdaftar!",
+        data: data,
       };
 
-      res.status(201).json(result);
+      res.status(201).json(response);
     } catch (error) {
       next(error);
     }
   }
 
-  // Controller for login
-  private static async login(
+  /**
+   * Controller untuk login pengguna.
+   */
+  static async login(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const request: LoginDto = req.body as LoginDto;
-      const path = req.path;
-      const response = await AuthService.login(request, path);
+      const request: LoginDto = req.body;
+      // Parameter 'path' tidak digunakan di service, jadi bisa dihilangkan saat memanggil
+      const data = await AuthService.login(request);
 
-
-      const result: BaseResponseDto<LoginResponseDto> = {
+      const response: BaseResponseDto<LoginResponseDto> = {
         status: "success",
         code: 200,
-        message: "User Logged In Successfully !",
-        data: response,
+        message: "Login berhasil!",
+        data: data,
       };
 
-      res.status(200).json(result);
+      res.status(200).json(response);
     } catch (error) {
       next(error);
     }
   }
 
-  static async loginUser(
+  /**
+   * Controller untuk memeriksa keberadaan email dalam database.
+   * Bagian dari alur "Lupa Password".
+   */
+  static async checkEmail(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    await AuthController.login(req, res, next);
-  }
-
-  // Controller for forgotting password
-  static async forgotPassword(req: Request, res: Response, next: NextFunction) {
     try {
-      const request: ForgotPasswordDto = req.body as ForgotPasswordDto;
-      await AuthService.forgotPassword(request);
+      const request: ForgotPasswordDto = req.body;
+      const data = await AuthService.checkEmail(request);
 
-      const result: BaseResponseDto<string> = {
+      const response: BaseResponseDto<{ email: string }> = {
         status: "success",
         code: 200,
-        message: "Password Reset Link Sent Successfully !",
+        message: "Email ditemukan.",
+        data: data,
       };
 
-      res.status(200).json(result);
+      res.status(200).json(response);
     } catch (error) {
       next(error);
     }
   }
 
-  /** End of Login and Registration Routes */
+  /**
+   * Controller untuk mereset password pengguna.
+   * Bagian dari alur "Lupa Password".
+   */
+  static async resetPassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const request: ResetPasswordDto = req.body;
+      await AuthService.resetPassword(request);
+
+      const response: BaseResponseDto<null> = {
+        status: "success",
+        code: 200,
+        message: "Kata sandi berhasil diubah.",
+        data: null,
+      };
+
+      res.status(200).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
