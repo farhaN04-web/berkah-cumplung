@@ -33,5 +33,5 @@ export type ForgotPasswordDTO = {
 export type ResetPasswordDTO = {
   email: string;
   password:  string;
-  confirmPassword:  string;
+  confirmationPassword:  string;
 }

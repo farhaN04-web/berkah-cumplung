@@ -53,9 +53,9 @@ export const resetPasswordSchema = z
     password: z
       .string()
       .min(6, { message: "Kata sandi minimal 6 karakter" }),
-    confirmPassword: z.string(),
+    confirmationPassword: z.string(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.confirmationPassword, {
     message: "Konfirmasi kata sandi tidak cocok",
     path: ["confirmPassword"],
   });
