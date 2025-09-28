@@ -45,7 +45,7 @@ export const useSignIn = () => {
             role: response.data.user.role as "user" | "admin",
           },
         };
-        setSession(sessionData, {});
+        setSession(sessionData);
       }
     },
     onError: (error) => {
@@ -117,7 +117,7 @@ export function useCheckEmail() {
  */
 export const useResetPassword = () => {
   const mutationOptions: UseMutationOptions<
-    ApiResponse<null>,
+    ApiResponse<ResetPasswordDTO>,
     ResponseError,
     ResetPasswordDTO
   > = {
@@ -125,6 +125,7 @@ export const useResetPassword = () => {
     onSuccess: (response) => {
       toast.success(response.message || "Kata sandi berhasil diubah!");
     },
+
     onError: (error) => {
       toast.error(error.response?.message || "Gagal mengubah kata sandi");
     },
