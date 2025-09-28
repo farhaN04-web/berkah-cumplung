@@ -16,10 +16,10 @@ class AuthService {
    */
   async login(request: LoginDTO) {
     const response = await httpClient.post<ApiResponse<LoginResponse>>(
-      "/auth/login",
-      request
+      "/login",
+      request,
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -28,8 +28,8 @@ class AuthService {
    */
   async register(request: RegisterDTO) {
     const response = await httpClient.post<ApiResponse<RegisterResponse>>(
-      "/auth/register",
-      request
+      "/register",
+      request,
     );
     return response;
   }
@@ -40,8 +40,8 @@ class AuthService {
    */
   async checkEmail(request: ForgotPasswordDTO) {
     const response = await httpClient.post<ApiResponse<{ email: string }>>(
-      "/auth/check-email",
-      request
+      "/check-email",
+      request,
     );
     return response;
   }
@@ -51,12 +51,13 @@ class AuthService {
    * @param request - Data email dan password baru
    */
   async resetPassword(request: ResetPasswordDTO) {
-    const response = await httpClient.post<ApiResponse<undefined>>(
-      "/auth/reset-password",
-      request
+    const response = await httpClient.post<ApiResponse<ResetPasswordDTO>>(
+      "/reset-password",
+      request,
     );
     return response;
   }
 }
 
 export const authService = new AuthService();
+
