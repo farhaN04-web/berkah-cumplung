@@ -43,7 +43,7 @@ export const Footer = () => {
             </p>
             <div className="flex gap-2">
               <a
-                href="https://wa.me/6288233224980"
+                href="https://wa.me/620123456789"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="h-[36px] w-[36px]"

@@ -62,7 +62,7 @@ const ContactPage = () => {
                         Telepon & WhatsApp
                       </p>
                       <p className="text-xs text-neutral_500 md:text-sm">
-                        +62 857 4143 6764
+                        +62 1234 56789  
                       </p>
                     </div>
                   </div>
