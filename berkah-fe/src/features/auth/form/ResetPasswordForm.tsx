@@ -17,6 +17,8 @@ import { Input } from "@/components/ui/input";
 import { useResetPassword } from "@/hooks/useAuth";
 import { resetPasswordSchema } from "@/schemas/auth";
 import { ResponseError } from "@/types";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 // Tipe data form berdasarkan skema Zod
 type FormData = z.infer<typeof resetPasswordSchema>;
@@ -28,13 +30,17 @@ interface ResetPasswordFormProps {
 
 export const ResetPasswordForm = ({ email }: ResetPasswordFormProps) => {
   const navigate = useNavigate();
+  const [showPasswords, setShowPasswords] = useState({
+    password: false,
+    confirmationPassword: false,
+  });
 
   // Inisialisasi form dengan react-hook-form dan zodResolver
   const form = useForm<FormData>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
       password: "",
-      confirmPassword: "",
+      confirmationPassword: "",
     },
   });
 
@@ -56,11 +62,9 @@ export const ResetPasswordForm = ({ email }: ResetPasswordFormProps) => {
         },
         onError: (error) => {
           const err = error as ResponseError;
-          toast.error(
-            err.response?.message || "Gagal mengubah kata sandi."
-          );
+          toast.error(err.response?.message || "Gagal mengubah kata sandi.");
         },
-      }
+      },
     );
   };
 
@@ -74,12 +78,29 @@ export const ResetPasswordForm = ({ email }: ResetPasswordFormProps) => {
             <FormItem>
               <FormLabel>Kata Sandi Baru</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
-                  placeholder="******"
-                  {...field}
-                  disabled={isPending}
-                />
+                <div className="relative">
+                  <Input
+                    type={showPasswords.password ? "text" : "password"}
+                    placeholder="******"
+                    {...field}
+                    disabled={isPending}
+                  />
+                  <div
+                    className="absolute right-3 top-2.5 cursor-pointer text-neutral_500"
+                    onClick={() =>
+                      setShowPasswords((prev) => ({
+                        ...prev,
+                        password: !prev.password,
+                      }))
+                    }
+                  >
+                    {showPasswords.password ? (
+                      <EyeOff size={18} />
+                    ) : (
+                      <Eye size={18} />
+                    )}
+                  </div>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -87,17 +108,36 @@ export const ResetPasswordForm = ({ email }: ResetPasswordFormProps) => {
         />
         <FormField
           control={form.control}
-          name="confirmPassword"
+          name="confirmationPassword"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Konfirmasi Kata Sandi Baru</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
-                  placeholder="******"
-                  {...field}
-                  disabled={isPending}
-                />
+                <div className="relative">
+                  <Input
+                    type={
+                      showPasswords.confirmationPassword ? "text" : "password"
+                    }
+                    placeholder="******"
+                    {...field}
+                    disabled={isPending}
+                  />
+                  <div
+                    className="absolute right-3 top-2.5 cursor-pointer text-neutral_500"
+                    onClick={() =>
+                      setShowPasswords((prev) => ({
+                        ...prev,
+                        confirmationPassword: !prev.confirmationPassword,
+                      }))
+                    }
+                  >
+                    {showPasswords.confirmationPassword ? (
+                      <EyeOff size={18} />
+                    ) : (
+                      <Eye size={18} />
+                    )}
+                  </div>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
