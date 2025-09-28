@@ -26,4 +26,7 @@ class AuthRoute {
 }
 
 // Ekspor instance dari router agar bisa digunakan di app.ts
-export const authRouter = new AuthRoute().router;
+const authRouter = new AuthRoute().router;
+
+export default authRouter;
+
