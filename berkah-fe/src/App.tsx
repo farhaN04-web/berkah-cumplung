@@ -23,7 +23,7 @@ import { Toaster } from "react-hot-toast";
 import { OrderPage, EditOrderPage } from "@/pages/dashboard/order";
 import { CustomerPage } from "@/pages/dashboard/customer";
 import { LoginPage, RegisterPage, ForgotPasswordPage } from "@/pages/auth";
-import { ResetPasswordPage } from "./pages/auth/ResetPasswordPage";
+import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import { CatalogProductPage, ProductDetailPage } from "@/pages/user/catalog";
 import { CartPage } from "@/pages/user/cart";
 import { DashboardPage } from "@/pages/dashboard";
