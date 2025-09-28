@@ -2,7 +2,6 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import { ForgotPasswordForm } from "@/features/auth/form/ForgotPasswordForm";
 import { forgotPasswordSchema, ForgotPasswordSchema } from "@/schemas/auth";
-import { useForgotPassword } from "@/hooks/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -13,12 +12,6 @@ const ForgotPasswordPage = () => {
     },
     resolver: zodResolver(forgotPasswordSchema),
   });
-
-  const { mutate: forgotPassword, isLoading } = useForgotPassword();
-
-  const handleForgotPassword = (values: ForgotPasswordSchema) => {
-    forgotPassword(values);
-  };
 
   return (
     <div className="h-[calc(100vh-5.25rem)] w-full bg-amber-50">
@@ -34,10 +27,7 @@ const ForgotPasswordPage = () => {
           </CardHeader>
 
           <Form {...form}>
-            <ForgotPasswordForm
-              onForgotPasswordSubmit={handleForgotPassword}
-              isLoading={isLoading}
-            />
+            <ForgotPasswordForm />
           </Form>
         </Card>
       </div>
