@@ -13,10 +13,11 @@ import { Link } from "react-router-dom";
 const HomePage = () => {
   const { data: productList, isLoading, isError, errorMessage } = useProducts();
 
-  const topProduct = useMemo(
-    () => productList?.data.slice(0, 3),
-    [productList?.data],
-  );
+  const topProduct = useMemo(() => {
+    return productList && productList?.data
+      ? productList?.data?.slice(0, 3)
+      : [];
+  }, [productList]);
 
   return (
     <div className="w-full">
@@ -29,31 +30,40 @@ const HomePage = () => {
           </h1>
           <p className="mb-8 text-lg md:text-xl lg:text-2xl">
             Ciptakan dapur yang hangat dan estetik dengan
-            <br className="hidden sm:block" /> peralatan fungsional dari kayu dan batok kelapa.
+            <br className="hidden sm:block" /> peralatan fungsional dari kayu
+            dan batok kelapa.
           </p>
           <Link to="/catalog">
-            <Button className="text-base rounded-full bg-amber-800 hover:bg-amber-500 md:text-lg">
+            <Button className="rounded-full bg-amber-800 text-base hover:bg-amber-500 md:text-lg">
               Lihat Katalog <ArrowRight />
             </Button>
           </Link>
         </div>
       </section>
 
-      <section className="py-10 bg-amber-50">
-        <div className="container px-4 mx-auto text-center">
+      <section className="bg-amber-50 py-10">
+        <div className="container mx-auto px-4 text-center">
           <h2 className="mb-8 text-2xl font-bold text-amber-800 md:text-[32px]">
             Tentang Berkah Cumplung
           </h2>
-          <p className="mx-auto text-lg text-black max-w-7xl md:text-2xl">
-            Tidak hanya kayu atau batok kelapa yang memiliki nilai guna, tetapi juga dapat menjadi ornamen <br className="hidden sm:block" />indah yang menghadirkan kebahagiaan bagi siapa pun yang melihatnya. Hal inilah yang selalu kami{" "}
-            <br className="hidden sm:block" />  tampilkan pada setiap karya, dengan desain yang melibatkan banyak detail alami serta sentuhan finishing yang menarik.
+          <p className="mx-auto max-w-7xl text-lg text-black md:text-2xl">
+            Tidak hanya kayu atau batok kelapa yang memiliki nilai guna, tetapi
+            juga dapat menjadi ornamen <br className="hidden sm:block" />
+            indah yang menghadirkan kebahagiaan bagi siapa pun yang melihatnya.
+            Hal inilah yang selalu kami <br className="hidden sm:block" />{" "}
+            tampilkan pada setiap karya, dengan desain yang melibatkan banyak
+            detail alami serta sentuhan finishing yang menarik.
           </p>
-          <p className="mx-auto my-6 text-lg text-black max-w-7xl md:text-2xl">
-            Kreativitas seorang pengrajin yang berawal dari sebuah hobi sederhana, hingga pada <br className="hidden sm:block" /> tahun 2021 menghadirkan karya yang mampu menarik minat banyak orang, baik anak-anak
-            <br className="hidden sm:block" /> maupun dewasa, berupa produk kerajinan unik dengan nilai seni yang tinggi.
+          <p className="mx-auto my-6 max-w-7xl text-lg text-black md:text-2xl">
+            Kreativitas seorang pengrajin yang berawal dari sebuah hobi
+            sederhana, hingga pada <br className="hidden sm:block" /> tahun 2021
+            menghadirkan karya yang mampu menarik minat banyak orang, baik
+            anak-anak
+            <br className="hidden sm:block" /> maupun dewasa, berupa produk
+            kerajinan unik dengan nilai seni yang tinggi.
           </p>
           <Link to="/about">
-            <Button className="text-base text-black bg-white border border-neutral-300 hover:bg-neutral-300 md:text-lg">
+            <Button className="border border-neutral-300 bg-white text-base text-black hover:bg-neutral-300 md:text-lg">
               Baca Selengkapnya
             </Button>
           </Link>
@@ -63,24 +73,25 @@ const HomePage = () => {
 
       {/* Product Section Start */}
       <section className="py-10">
-        <div className="container px-4 mx-auto">
+        <div className="container mx-auto px-4">
           <div className="mb-10 text-center">
             <h1 className="mb-8 text-2xl font-bold text-amber-800 md:text-[32px]">
               Produk Unggulan
             </h1>
-            <p className="mx-auto text-lg max-w-7xl text-neutral_500 md:text-2xl">
-              Produk kerajinan dari kayu dan batok kelapa handmade dengan desain yang berkualitas
+            <p className="mx-auto max-w-7xl text-lg text-neutral_500 md:text-2xl">
+              Produk kerajinan dari kayu dan batok kelapa handmade dengan desain
+              yang berkualitas
             </p>
           </div>
 
           <div className="flex flex-wrap justify-center gap-6">
             {isLoading ? (
-              <LoadingState className="w-full min-h-64" />
+              <LoadingState className="min-h-64 w-full" />
             ) : isError ? (
-              <ErrorState className="w-full min-h-64" message={errorMessage!} />
-            ) : productList?.data.length === 0 ? (
+              <ErrorState className="min-h-64 w-full" message={errorMessage!} />
+            ) : productList?.data?.length === 0 ? (
               <EmptyState
-                className="w-full min-h-64"
+                className="min-h-64 w-full"
                 message="Belum ada produk"
               />
             ) : (
@@ -95,7 +106,7 @@ const HomePage = () => {
           </div>
           <div className="pt-8 text-center">
             <Link to="/catalog">
-              <Button className="text-base bg-amber-800 hover:bg-amber-500 hover:opacity-90 md:text-lg">
+              <Button className="bg-amber-800 text-base hover:bg-amber-500 hover:opacity-90 md:text-lg">
                 Lihat Semua Produk <ArrowRight />
               </Button>
             </Link>
