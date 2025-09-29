@@ -48,7 +48,6 @@ export default function HistoryItem({
             </p>
             {shipping_status == "success" && (
               <p className="text-xs text-neutral_500 md:text-sm">
-                No. Resi: {shipping_number}
               </p>
             )}
           </div>

@@ -69,6 +69,7 @@ export class TransactionService {
             total: transaction.total_price,
             status: transaction.status,
             shipping_status: transaction.shipping_status,
+            shipping_number: transaction.shipping_number,
             createdAt: transaction.createdAt,
             updatedAt: transaction.updatedAt,
           } as TransactionDto)
