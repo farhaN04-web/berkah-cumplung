@@ -5,8 +5,6 @@ import { useOrderHistory } from "@/hooks/useOrderHistory";
 const HistoryPage = () => {
   const { data, isLoading, isError, errorMessage } = useOrderHistory();
 
-  console.log({ data });
-
   return (
     <div className="min-h-[calc(100vh-20rem)]">
       <div className="container mx-auto space-y-10 px-4 py-10">
