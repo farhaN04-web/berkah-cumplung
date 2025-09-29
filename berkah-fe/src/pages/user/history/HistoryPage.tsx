@@ -19,7 +19,7 @@ const HistoryPage = () => {
           />
         ) : (
           <div className="space-y-4">
-            {data?.data.map((history, idx) => (
+            {data?.data?.map((history, idx) => (
               <HistoryItem
                 key={idx}
                 code={history.code}
