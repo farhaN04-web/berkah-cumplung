@@ -1,6 +1,5 @@
-// DTO untuk item yang ditampilkan di keranjang
 export type CartItemDTO = {
-  id: string; // ID dari item di keranjang
+  id: string;
   product_name: string;
   product_image: string;
   qty: number;
@@ -8,24 +7,20 @@ export type CartItemDTO = {
   subtotal: number;
 };
 
-// DTO untuk menambah item ke keranjang
 export interface AddToCartDTO {
   productId: string;
   quantity: number;
 }
 
-// DTO untuk mengupdate item di keranjang
 export interface UpdateCartItemDTO {
   cartId: string;
   quantity: number;
 }
 
-// DTO untuk menghapus item dari keranjang
 export type DeleteCartItemDTO = {
   cartId: string;
 };
 
-// DTO untuk payload checkout, TERMASUK PENGIRIMAN
 export interface CheckoutPayloadDTO {
   items: {
     product_id: string;
@@ -36,7 +31,6 @@ export interface CheckoutPayloadDTO {
   address: string;
 }
 
-// DTO untuk respons setelah checkout berhasil
 export interface CheckoutResultDTO {
   id: string;
   code: string;
