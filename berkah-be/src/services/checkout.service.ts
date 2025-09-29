@@ -189,6 +189,7 @@ export class CheckoutService {
       userId: transaction.user_id,
       total: transaction.total_price,
       status: transaction.status,
+      shipping_status: transaction.shipping_status,
       createdAt: transaction.createdAt,
       updatedAt: transaction.updatedAt,
       TransactionDetails: transaction.TransactionDetails.map((detail) => ({
