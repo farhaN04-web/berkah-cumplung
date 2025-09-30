@@ -17,7 +17,7 @@ type CartOrderProps = {
 export const CartOrder = ({ items }: CartOrderProps) => {
   const { mutate: checkoutCart, isLoading } = useCheckoutCart();
   const [selectedCourier, setSelectedCourier] = useState("Pos");
-  const courierOptions = ["Pos", "JNE", "J&T", "SiCepat", "GoSend"];
+  const courierOptions = ["Pos", "JNE", "J&T", "SiCepat"];
 
   const handleCheckout = () => {
     checkoutCart(

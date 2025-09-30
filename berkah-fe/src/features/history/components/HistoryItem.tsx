@@ -29,7 +29,6 @@ export default function HistoryItem({
   date,
   status,
   shipping_status,
-  shipping_number,
   total,
   details,
 }: HistoryItemProps) {

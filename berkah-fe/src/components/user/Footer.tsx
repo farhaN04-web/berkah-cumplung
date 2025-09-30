@@ -22,13 +22,13 @@ export const Footer = () => {
               className="h-32 w-auto"
             />
             <img 
-              src="images/Logo BEM.png" 
-              alt="Logo BEM" 
+              src="images/unggul.png" 
+              alt="Logo UBSI UNGGUL" 
               className="h-32 w-auto"
               />
             <img 
-              src="images/logokabinetvistara.png" 
-              alt="Logo Kabinet Vistara" 
+              src="images/bipemas.png" 
+              alt="Logo Bipemas" 
               className="h-32 w-auto"
               />
           </div>
@@ -43,7 +43,7 @@ export const Footer = () => {
             </p>
             <div className="flex gap-2">
               <a
-                href="https://wa.me/620123456789"
+                href="https://wa.me/6285741436764"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="h-[36px] w-[36px]"
