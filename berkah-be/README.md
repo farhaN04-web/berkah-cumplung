@@ -1,8 +1,8 @@
-# Broderie Backend
+# Berkah Backend
 
 
 ## Overview
-Broderie Backend is a RESTful API built using **Express**, **TypeScript**, and **Prisma** as the ORM. It provides a robust backend for managing application data and includes Swagger documentation for API reference.
+Berkah Backend is a RESTful API built using **Express**, **TypeScript**, and **Prisma** as the ORM. It provides a robust backend for managing application data and includes Swagger documentation for API reference.
 
 ## Features
 - Built with **TypeScript** for type safety.
@@ -22,7 +22,7 @@ Ensure you have the following installed:
 ### Steps
 1. Clone Repository
     ```bash
-    git clone https://github.com/hafiprojects/broderie-be
+    git clone https://github.com/hafiprojects/berkah-be
     ```
 2. Install Dependencies
     ```bash
@@ -30,7 +30,7 @@ Ensure you have the following installed:
     ```
 3. Setup .env
     ```bash
-    DATABASE_URL="mysql://root:@127.0.0.1/broderie_db"
+    DATABASE_URL="mysql://root:@127.0.0.1/berkah_db"
     JWT_SECRET="your-secret"
     PORT=5000
     UPLOAD_DIR="./uploads"

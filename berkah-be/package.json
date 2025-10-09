@@ -1,7 +1,7 @@
 {
-  "name": "broderie-backend",
+  "name": "berkah-backend",
   "version": "1.0.0",
-  "description": "backend api for Broderie website",
+  "description": "backend api for Berkah Cumplung website",
   "main": "index.js",
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

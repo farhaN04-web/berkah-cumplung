@@ -57,7 +57,7 @@ app.use(
 
 app.get("/", (req, res) => {
   res.json({
-    name: "Broderie Backend API",
+    name: "Berkah Backend API",
     version: "1.0.0",
   });
 });

@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: broderie-backend
+    container_name: berkah-backend
     restart: unless-stopped
     ports:
       - "5001:5000"
@@ -15,25 +15,25 @@ services:
     depends_on:
       - db
     networks:
-      - broderie-network
+      - berkah-network
 
   db:
     image: mysql:8.0.40
-    container_name: broderie-db
+    container_name: berkah-db
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: broderie
+      MYSQL_DATABASE: berkah
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
     networks:
-      - broderie-network
+      - berkah-network
     mem_limit: 1073741824 # 1GB memory limit
 
 networks:
-  broderie-network:
+  berkah-network:
     driver: bridge
 
 volumes:

@@ -23,9 +23,9 @@ const swaggerOptions = {
 	swaggerDefinition: {
 		openapi: "3.0.0",
 		info: {
-			title: "Broderie Backend API",
+			title: "Berkah Backend API",
 			version: "1.0.0",
-			description: "API Documentation of Broderie Backend API",
+			description: "API Documentation of Berkah Backend API",
 		},
 		servers: [
 			{

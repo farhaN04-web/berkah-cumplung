@@ -36,7 +36,7 @@ export class Mailer {
     template = template.replace("{{name}}", name);
 
     const mailOptions = {
-      from: `"Broderie App" <${process.env.MAIL_USER}>`,
+      from: `"Berkah App" <${process.env.MAIL_USER}>`,
       to: email,
       subject: "Reset your password",
       html: template,
